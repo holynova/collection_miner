@@ -35,25 +35,26 @@
             </div>
           </div>
           <div class="card-face card-front">
-            <div class="card-top">
-              <span class="favicon" aria-hidden="true"></span>
-              <div>
-                <a class="title" target="_blank" rel="noreferrer"></a>
-                <p class="url"></p>
+            <div class="card-header">
+              <div class="brand">
+                <span class="favicon" aria-hidden="true">
+                  <span class="favicon-text"></span>
+                </span>
+                <div class="brand-text">
+                  <p class="meta-date"></p>
+                </div>
               </div>
+              <button class="bookmark-btn btn-like" type="button" aria-label="点赞">❤</button>
             </div>
-            <div class="info-row">
-              <p class="path"></p>
-              <p class="meta-date"></p>
+
+            <p class="title"></p>
+            <p class="url"></p>
+
+            <div class="tags">
+              <span class="tag path"></span>
             </div>
-            <div class="meta">
-              <span class="meta-item meta-stats"></span>
-            </div>
-            <div class="actions">
-              <button class="action-btn btn-like" type="button">赞</button>
-              <button class="action-btn btn-dislike" type="button">踩</button>
-              <button class="action-btn btn-delete" type="button">删除</button>
-            </div>
+
+            <button class="trash-btn btn-delete" type="button" aria-label="删除">🗑</button>
           </div>
         </div>
       </article>

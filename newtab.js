@@ -13,14 +13,56 @@ const MAX_TILT = 18;
 const MAX_FLOAT = -16;
 const BUILD_ID = "2026-03-14-tilt";
 
+let currentSelection = [];
+
 function formatDate(ms) {
   if (!ms) return "";
   const date = new Date(ms);
-  return date.toLocaleDateString();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function formatElapsed(ms) {
+  if (!ms) return "";
+  const start = new Date(ms);
+  const end = new Date();
+
+  const startDate = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+  const endDate = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+
+  if (endDate < startDate) return "距今 0天";
+
+  const msPerDay = 24 * 60 * 60 * 1000;
+  const days = Math.max(0, Math.floor((endDate - startDate) / msPerDay));
+
+  if (days >= 365) {
+    const years = Math.round((days / 365) * 10) / 10;
+    return `距今 ${years}年`;
+  }
+  if (days >= 30) {
+    const months = Math.round((days / 30) * 10) / 10;
+    return `距今 ${months}月`;
+  }
+  return `距今 ${days}天`;
 }
 
 function faviconUrl(url) {
   return `chrome://favicon2/?size=32&url=${encodeURIComponent(url)}`;
+}
+
+function getInitial(title, url) {
+  const source = (title || "").trim() || (url || "").trim();
+  if (!source) return "?";
+  const firstChar = Array.from(source)[0];
+  if (firstChar) return firstChar.toUpperCase();
+  try {
+    const host = new URL(url).hostname.replace(/^www\./, "");
+    return (host && host[0] ? host[0].toUpperCase() : "?");
+  } catch (error) {
+    return "?";
+  }
 }
 
 function getPath(id, index) {
@@ -214,19 +256,19 @@ function buildCards(bookmarks, index, stats) {
     const clone = template.content.cloneNode(true);
     const card = clone.querySelector(".card");
     const inner = clone.querySelector(".card-inner");
-    const link = clone.querySelector(".title");
+    const titleEl = clone.querySelector(".title");
     const urlEl = clone.querySelector(".url");
     const pathEl = clone.querySelector(".path");
     const dateEl = clone.querySelector(".meta-date");
-    const statsEl = clone.querySelector(".meta-stats");
     const favicon = clone.querySelector(".favicon");
+    const faviconText = clone.querySelector(".favicon-text");
     const likeBtn = clone.querySelector(".btn-like");
-    const dislikeBtn = clone.querySelector(".btn-dislike");
     const deleteBtn = clone.querySelector(".btn-delete");
+    const bookmarkBtn = clone.querySelector(".bookmark-btn");
 
     const title = item.title || item.url;
     const path = getPath(item.id, index);
-    const record = stats[item.id] || { shows: 0, clicks: 0, likes: 0, dislikes: 0 };
+    const record = stats[item.id] || { shows: 0, clicks: 0, likes: 0, dislikes: 0, liked: false };
     const score = record.likes - record.dislikes;
     let rarity = "rarity-common";
     if (score >= 5) {
@@ -237,32 +279,51 @@ function buildCards(bookmarks, index, stats) {
       rarity = "rarity-cursed";
     }
     card.classList.add(rarity);
+    if (record.liked) {
+      bookmarkBtn.classList.add("is-liked");
+    }
 
-    link.textContent = title;
-    link.href = item.url;
+    titleEl.textContent = title;
     urlEl.textContent = item.url;
     pathEl.textContent = path;
-    dateEl.textContent = item.dateAdded ? `添加于 ${formatDate(item.dateAdded)}` : "";
-    statsEl.textContent = `展 ${record.shows} · 访 ${record.clicks} · 赞 ${record.likes} · 踩 ${record.dislikes}`;
+    dateEl.textContent = item.dateAdded
+      ? `添加于 ${formatDate(item.dateAdded)}（${formatElapsed(item.dateAdded)}）`
+      : "";
     favicon.style.backgroundImage = `url('${faviconUrl(item.url)}')`;
+    faviconText.textContent = getInitial(title, item.url);
 
-    likeBtn.addEventListener("click", async () => {
+    async function handleVisit() {
       const updated = { ...(stats[item.id] || { shows: 0, clicks: 0, likes: 0, dislikes: 0 }) };
-      updated.likes += 1;
+      updated.clicks += 1;
       stats[item.id] = updated;
       await saveStats(stats);
-      statsEl.textContent = `展 ${updated.shows} · 访 ${updated.clicks} · 赞 ${updated.likes} · 踩 ${updated.dislikes}`;
+    }
+ 
+    card.addEventListener("click", async (event) => {
+      const target = event.target;
+      if (target.closest("button")) return;
+      await handleVisit();
+      window.open(item.url, "_blank", "noopener,noreferrer");
     });
 
-    dislikeBtn.addEventListener("click", async () => {
-      const updated = { ...(stats[item.id] || { shows: 0, clicks: 0, likes: 0, dislikes: 0 }) };
-      updated.dislikes += 1;
+    likeBtn.addEventListener("click", async (event) => {
+      event.stopPropagation();
+      const updated = { ...(stats[item.id] || { shows: 0, clicks: 0, likes: 0, dislikes: 0, liked: false }) };
+      if (updated.liked) {
+        updated.liked = false;
+        updated.likes = Math.max(0, updated.likes - 1);
+        bookmarkBtn.classList.remove("is-liked");
+      } else {
+        updated.liked = true;
+        updated.likes += 1;
+        bookmarkBtn.classList.add("is-liked");
+      }
       stats[item.id] = updated;
       await saveStats(stats);
-      statsEl.textContent = `展 ${updated.shows} · 访 ${updated.clicks} · 赞 ${updated.likes} · 踩 ${updated.dislikes}`;
     });
 
-    deleteBtn.addEventListener("click", async () => {
+    deleteBtn.addEventListener("click", async (event) => {
+      event.stopPropagation();
       const ok = confirm("确定要从收藏夹里删除这条吗？");
       if (!ok) return;
       let node = null;
@@ -275,10 +336,12 @@ function buildCards(bookmarks, index, stats) {
 
       try {
         await chrome.bookmarks.remove(item.id);
-        card.remove();
       } catch (error) {
         return;
       }
+
+      currentSelection = currentSelection.filter((entry) => entry.id !== item.id);
+      await fillSelection();
 
       if (node) {
         toast.show({
@@ -300,15 +363,11 @@ function buildCards(bookmarks, index, stats) {
       }
     });
 
-    link.addEventListener("click", async () => {
-      const updated = { ...(stats[item.id] || { shows: 0, clicks: 0, likes: 0, dislikes: 0 }) };
-      updated.clicks += 1;
-      stats[item.id] = updated;
-      await saveStats(stats);
-      statsEl.textContent = `展 ${updated.shows} · 访 ${updated.clicks} · 赞 ${updated.likes} · 踩 ${updated.dislikes}`;
+    bookmarkBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
     });
 
-    attachTilt(card);
+    attachTilt(card, inner);
     container.appendChild(card);
   }
 
@@ -326,42 +385,65 @@ function renderFooter(total) {
     : "没有检测到书签。";
 }
 
-async function showRandomBookmarks() {
+async function fillSelection() {
   const data = await loadData();
   const total = data.bookmarks.length;
   if (!total) {
+    currentSelection = [];
     buildCards([], data.index, data.stats);
     renderFooter(0);
+    return;
+  }
+
+  const pickedIds = new Set(currentSelection.map((item) => item.id));
+  const available = data.bookmarks.filter((item) => !pickedIds.has(item.id));
+  if (!available.length) {
+    buildCards(currentSelection, data.index, data.stats);
+    renderFooter(total);
+    return;
+  }
+
+  const need = Math.max(0, 3 - currentSelection.length);
+  if (!need) {
+    buildCards(currentSelection, data.index, data.stats);
+    renderFooter(total);
     return;
   }
 
   const recentSet = new Set(data.recent);
   const hasEnough = total >= MIN_BOOKMARKS_FOR_FILTER;
   const filtered = hasEnough
-    ? data.bookmarks.filter((item) => !recentSet.has(item.id))
-    : data.bookmarks;
+    ? available.filter((item) => !recentSet.has(item.id))
+    : available;
 
-  let selection = weightedPick(filtered, 3, data.stats);
-  if (selection.length < 3) {
-    const remaining = data.bookmarks.filter(
-      (item) => !selection.find((picked) => picked.id === item.id)
+  let picked = weightedPick(filtered, need, data.stats);
+  if (picked.length < need) {
+    const remaining = available.filter(
+      (item) => !picked.find((pickedItem) => pickedItem.id === item.id)
     );
-    selection = selection.concat(weightedPick(remaining, 3 - selection.length, data.stats));
+    picked = picked.concat(weightedPick(remaining, need - picked.length, data.stats));
   }
 
-  for (const item of selection) {
+  currentSelection = currentSelection.concat(picked);
+
+  for (const item of picked) {
     const record = data.stats[item.id] || { shows: 0, clicks: 0, likes: 0, dislikes: 0 };
     record.shows += 1;
     data.stats[item.id] = record;
   }
 
-  const recent = [...data.recent, ...selection.map((item) => item.id)];
+  const recent = [...data.recent, ...picked.map((item) => item.id)];
   const trimmed = recent.slice(-RECENT_LIMIT);
 
   await Promise.all([saveStats(data.stats), saveRecent(trimmed)]);
 
-  buildCards(selection, data.index, data.stats);
+  buildCards(currentSelection, data.index, data.stats);
   renderFooter(total);
+}
+
+async function showRandomBookmarks() {
+  currentSelection = [];
+  await fillSelection();
 }
 
 function setBuildBadge() {
