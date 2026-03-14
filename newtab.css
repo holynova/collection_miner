@@ -54,7 +54,6 @@ body::before {
   gap: 28px;
   position: relative;
   z-index: 1;
-  transform: translateY(-50px);
 }
 
 .header {
@@ -65,25 +64,12 @@ body::before {
   flex-wrap: wrap;
 }
 
-.eyebrow {
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  font-size: 12px;
-  font-weight: 700;
-  margin: 0 0 8px;
-  color: var(--gold);
-}
-
 h1 {
   margin: 0;
   font-size: 32px;
   text-shadow: 0 0 18px rgba(214, 162, 74, 0.35);
 }
 
-.subtitle {
-  margin: 8px 0 0;
-  color: var(--text-dim);
-}
 
 .btn {
   border: 2px solid var(--gold);
@@ -108,6 +94,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 22px;
+  align-items: start;
 }
 
 .card {
@@ -116,13 +103,9 @@ h1 {
   transition: transform 0.12s ease-out;
   position: relative;
   cursor: pointer;
+  height: 320px;
 }
 
-.card .card-front,
-.card .card-back {
-  position: relative;
-  z-index: 1;
-}
 
 .card-inner {
   position: relative;
@@ -146,6 +129,8 @@ h1 {
   backface-visibility: hidden;
   border: 2px solid rgba(214, 162, 74, 0.4);
   box-shadow: 0 16px 32px var(--shadow);
+  width: 100%;
+  height: 100%;
 }
 
 .card-back {
@@ -153,7 +138,6 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: translateY(-6px);
 }
 
 .back-frame {
@@ -188,7 +172,7 @@ h1 {
 
 .card-front {
   background: linear-gradient(145deg, var(--panel-mid), var(--panel-dark));
-  transform: rotateY(180deg) translateY(-6px);
+  transform: rotateY(180deg);
   padding: 18px;
   display: flex;
   flex-direction: column;

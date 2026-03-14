@@ -371,11 +371,12 @@ function buildCards(bookmarks, index, stats) {
     container.appendChild(card);
   }
 
-  setTimeout(() => {
-    for (const card of container.querySelectorAll(".card")) {
+  const cards = Array.from(container.querySelectorAll(".card"));
+  cards.forEach((card, index) => {
+    setTimeout(() => {
       card.classList.add("is-revealed");
-    }
-  }, 250);
+    }, 250 + index * 180);
+  });
 }
 
 function renderFooter(total) {
