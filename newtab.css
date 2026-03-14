@@ -1,0 +1,153 @@
+:root {
+  color-scheme: light;
+  font-family: "Avenir", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: radial-gradient(circle at top, #fff8ea, #f5f1e8 55%, #ebe7dc);
+  color: #1b1b1b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 32px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 12px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: #a1672b;
+}
+
+h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.subtitle {
+  margin: 8px 0 0;
+  color: #4a463f;
+}
+
+.btn {
+  border: none;
+  background: #1b1b1b;
+  color: #fff;
+  padding: 12px 20px;
+  font-size: 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 16px;
+  padding: 18px 18px 16px;
+  box-shadow: 0 12px 28px rgba(34, 24, 10, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-top {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.favicon {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: #f0ede5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.title {
+  color: #1b1b1b;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.title:hover {
+  text-decoration: underline;
+}
+
+.url {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #6b655d;
+  word-break: break-all;
+}
+
+.path {
+  margin: 0;
+  font-size: 13px;
+  color: #4a463f;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  color: #6b655d;
+}
+
+.footer {
+  font-size: 12px;
+  color: #6b655d;
+}
+
+@media (max-width: 720px) {
+  .page {
+    padding: 32px 18px;
+  }
+
+  .header {
+    align-items: flex-start;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+}

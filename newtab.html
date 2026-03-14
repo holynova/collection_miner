@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>收藏夹淘金</title>
+    <link rel="stylesheet" href="newtab.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <div>
+          <p class="eyebrow">收藏夹淘金</p>
+          <h1>今天想翻翻哪三条？</h1>
+          <p class="subtitle">从你的书签中随机挑选，点开即算一次访问。</p>
+        </div>
+        <button id="refresh-btn" class="btn" type="button">再换三条</button>
+      </header>
+
+      <section class="cards" id="cards"></section>
+
+      <footer class="footer" id="footer"></footer>
+    </main>
+
+    <template id="card-template">
+      <article class="card">
+        <div class="card-top">
+          <span class="favicon" aria-hidden="true"></span>
+          <div>
+            <a class="title" target="_blank" rel="noreferrer"></a>
+            <p class="url"></p>
+          </div>
+        </div>
+        <p class="path"></p>
+        <div class="meta">
+          <span class="meta-item meta-date"></span>
+          <span class="meta-item meta-stats"></span>
+        </div>
+      </article>
+    </template>
+
+    <script src="newtab.js"></script>
+  </body>
+</html>
