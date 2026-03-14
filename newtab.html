@@ -11,10 +11,10 @@
       <header class="header">
         <div>
           <p class="eyebrow">收藏夹淘金</p>
-          <h1>今天想翻翻哪三条？</h1>
-          <p class="subtitle">从你的书签中随机挑选，点开即算一次访问。</p>
+          <h1>今天想翻翻哪三张牌？</h1>
+          <p class="subtitle">从你的书签中随机挑选，翻牌即见。</p>
         </div>
-        <button id="refresh-btn" class="btn" type="button">再换三条</button>
+        <button id="refresh-btn" class="btn" type="button">再翻三张</button>
       </header>
 
       <section class="cards" id="cards"></section>
@@ -22,22 +22,47 @@
       <footer class="footer" id="footer"></footer>
     </main>
 
+    <div class="corner-badge" id="corner-badge"></div>
+
     <template id="card-template">
       <article class="card">
-        <div class="card-top">
-          <span class="favicon" aria-hidden="true"></span>
-          <div>
-            <a class="title" target="_blank" rel="noreferrer"></a>
-            <p class="url"></p>
+        <div class="card-inner">
+          <div class="card-face card-back">
+            <div class="back-frame">
+              <div class="back-symbol">♣</div>
+              <div class="back-title">MINER</div>
+              <div class="back-subtitle">BOOKMARKS</div>
+            </div>
           </div>
-        </div>
-        <p class="path"></p>
-        <div class="meta">
-          <span class="meta-item meta-date"></span>
-          <span class="meta-item meta-stats"></span>
+          <div class="card-face card-front">
+            <div class="card-top">
+              <span class="favicon" aria-hidden="true"></span>
+              <div>
+                <a class="title" target="_blank" rel="noreferrer"></a>
+                <p class="url"></p>
+              </div>
+            </div>
+            <div class="info-row">
+              <p class="path"></p>
+              <p class="meta-date"></p>
+            </div>
+            <div class="meta">
+              <span class="meta-item meta-stats"></span>
+            </div>
+            <div class="actions">
+              <button class="action-btn btn-like" type="button">赞</button>
+              <button class="action-btn btn-dislike" type="button">踩</button>
+              <button class="action-btn btn-delete" type="button">删除</button>
+            </div>
+          </div>
         </div>
       </article>
     </template>
+
+    <div id="toast" class="toast" role="status" aria-live="polite">
+      <span class="toast-message"></span>
+      <button class="toast-action" type="button">撤销</button>
+    </div>
 
     <script src="newtab.js"></script>
   </body>
