@@ -444,6 +444,31 @@ h1 {
   box-shadow: 0 18px 36px rgba(213, 81, 65, 0.35);
 }
 
+.age-white .card-front,
+.age-white .card-back {
+  border-color: rgba(245, 245, 245, 0.75);
+}
+
+.age-green .card-front,
+.age-green .card-back {
+  border-color: rgba(90, 200, 120, 0.85);
+}
+
+.age-blue .card-front,
+.age-blue .card-back {
+  border-color: rgba(80, 150, 255, 0.9);
+}
+
+.age-purple .card-front,
+.age-purple .card-back {
+  border-color: rgba(170, 120, 255, 0.9);
+}
+
+.age-gold .card-front,
+.age-gold .card-back {
+  border-color: rgba(242, 200, 107, 0.95);
+}
+
 @keyframes flipWobble {
   0% {
     transform: rotateY(0deg) rotateZ(0deg);

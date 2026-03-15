@@ -48,6 +48,17 @@ function formatElapsed(ms) {
   return `距今 ${days}天`;
 }
 
+function ageTier(ms) {
+  if (!ms) return "age-white";
+  const msPerDay = 24 * 60 * 60 * 1000;
+  const days = Math.max(0, Math.floor((Date.now() - ms) / msPerDay));
+  if (days < 365) return "age-white";
+  if (days < 365 * 2) return "age-green";
+  if (days < 365 * 3) return "age-blue";
+  if (days < 365 * 5) return "age-purple";
+  return "age-gold";
+}
+
 function faviconUrl(url) {
   return `chrome://favicon2/?size=32&url=${encodeURIComponent(url)}`;
 }
@@ -279,6 +290,7 @@ function buildCards(bookmarks, index, stats) {
       rarity = "rarity-cursed";
     }
     card.classList.add(rarity);
+    card.classList.add(ageTier(item.dateAdded));
     if (record.liked) {
       bookmarkBtn.classList.add("is-liked");
     }
@@ -340,8 +352,7 @@ function buildCards(bookmarks, index, stats) {
         return;
       }
 
-      currentSelection = currentSelection.filter((entry) => entry.id !== item.id);
-      await fillSelection();
+      await replaceDeletedCard(item.id);
 
       if (node) {
         toast.show({
@@ -434,6 +445,55 @@ async function fillSelection() {
   }
 
   const recent = [...data.recent, ...picked.map((item) => item.id)];
+  const trimmed = recent.slice(-RECENT_LIMIT);
+
+  await Promise.all([saveStats(data.stats), saveRecent(trimmed)]);
+
+  buildCards(currentSelection, data.index, data.stats);
+  renderFooter(total);
+}
+
+async function replaceDeletedCard(deletedId) {
+  const data = await loadData();
+  const total = data.bookmarks.length;
+  const index = currentSelection.findIndex((entry) => entry.id === deletedId);
+  if (index === -1) {
+    buildCards(currentSelection, data.index, data.stats);
+    renderFooter(total);
+    return;
+  }
+
+  const remaining = currentSelection.filter((entry) => entry.id !== deletedId);
+  const pickedIds = new Set(remaining.map((item) => item.id));
+  const available = data.bookmarks.filter((item) => !pickedIds.has(item.id));
+
+  if (!available.length) {
+    currentSelection = remaining;
+    buildCards(currentSelection, data.index, data.stats);
+    renderFooter(total);
+    return;
+  }
+
+  const recentSet = new Set(data.recent);
+  const hasEnough = total >= MIN_BOOKMARKS_FOR_FILTER;
+  const filtered = hasEnough
+    ? available.filter((item) => !recentSet.has(item.id))
+    : available;
+
+  let picked = weightedPick(filtered, 1, data.stats);
+  if (!picked.length) {
+    picked = weightedPick(available, 1, data.stats);
+  }
+  const newItem = picked[0];
+
+  currentSelection = [...remaining];
+  currentSelection.splice(index, 0, newItem);
+
+  const record = data.stats[newItem.id] || { shows: 0, clicks: 0, likes: 0, dislikes: 0, liked: false };
+  record.shows += 1;
+  data.stats[newItem.id] = record;
+
+  const recent = [...data.recent, newItem.id];
   const trimmed = recent.slice(-RECENT_LIMIT);
 
   await Promise.all([saveStats(data.stats), saveRecent(trimmed)]);
