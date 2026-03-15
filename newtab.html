@@ -12,12 +12,29 @@
         <div>
           <h1>收藏夹淘金</h1>
         </div>
-        <button id="refresh-btn" class="btn" type="button">再翻三张</button>
+        <div class="header-actions">
+          <label class="btn file-btn">
+            导入豆瓣已读
+            <input id="douban-file" type="file" accept="application/json" />
+          </label>
+          <button id="refresh-btn" class="btn" type="button">再翻三张</button>
+        </div>
       </header>
 
-      <section class="cards" id="cards"></section>
+      <nav class="tabs">
+        <button class="tab-btn active" data-tab="bookmarks" type="button">浏览器收藏夹</button>
+        <button class="tab-btn" data-tab="douban" type="button">豆瓣已读</button>
+      </nav>
 
-      <footer class="footer" id="footer"></footer>
+      <section class="tab-panel active" id="tab-bookmarks">
+        <section class="cards" id="cards"></section>
+        <footer class="footer" id="footer"></footer>
+      </section>
+
+      <section class="tab-panel" id="tab-douban">
+        <section class="cards" id="douban-cards"></section>
+        <footer class="footer" id="douban-footer"></footer>
+      </section>
     </main>
 
     <div class="corner-badge" id="corner-badge"></div>
@@ -51,6 +68,7 @@
             <div class="tags">
               <span class="tag path"></span>
             </div>
+            <div class="rating-stars"></div>
 
             <button class="trash-btn btn-delete" type="button" aria-label="删除">🗑</button>
           </div>

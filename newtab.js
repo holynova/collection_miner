@@ -3,7 +3,8 @@ const STORAGE_KEYS = {
   INDEX: "bookmarks_index",
   LAST_SYNC: "bookmarks_last_sync",
   STATS: "bookmark_stats",
-  RECENT: "bookmark_recent_shown"
+  RECENT: "bookmark_recent_shown",
+  DOUBAN: "douban_reads"
 };
 
 const RECENT_LIMIT = 60;
@@ -11,9 +12,12 @@ const MIN_BOOKMARKS_FOR_FILTER = 12;
 const UNDO_TIMEOUT = 8000;
 const MAX_TILT = 18;
 const MAX_FLOAT = -16;
-const BUILD_ID = "2026-03-14-tilt";
+const BUILD_ID = "2026-03-15-tabs";
+let activeTab = "bookmarks";
 
 let currentSelection = [];
+let doubanSelection = [];
+let currentDoubanSelection = [];
 
 function formatDate(ms) {
   if (!ms) return "";
@@ -46,17 +50,6 @@ function formatElapsed(ms) {
     return `距今 ${months}月`;
   }
   return `距今 ${days}天`;
-}
-
-function ageTier(ms) {
-  if (!ms) return "age-white";
-  const msPerDay = 24 * 60 * 60 * 1000;
-  const days = Math.max(0, Math.floor((Date.now() - ms) / msPerDay));
-  if (days < 365) return "age-white";
-  if (days < 365 * 2) return "age-green";
-  if (days < 365 * 3) return "age-blue";
-  if (days < 365 * 5) return "age-purple";
-  return "age-gold";
 }
 
 function faviconUrl(url) {
@@ -180,14 +173,16 @@ async function loadData() {
     STORAGE_KEYS.BOOKMARKS,
     STORAGE_KEYS.INDEX,
     STORAGE_KEYS.STATS,
-    STORAGE_KEYS.RECENT
+    STORAGE_KEYS.RECENT,
+    STORAGE_KEYS.DOUBAN
   ]);
 
   return {
     bookmarks: stored[STORAGE_KEYS.BOOKMARKS] || [],
     index: stored[STORAGE_KEYS.INDEX] || {},
     stats: stored[STORAGE_KEYS.STATS] || {},
-    recent: stored[STORAGE_KEYS.RECENT] || []
+    recent: stored[STORAGE_KEYS.RECENT] || [],
+    douban: stored[STORAGE_KEYS.DOUBAN] || []
   };
 }
 
@@ -200,6 +195,12 @@ async function saveStats(stats) {
 async function saveRecent(recent) {
   await chrome.storage.local.set({
     [STORAGE_KEYS.RECENT]: recent
+  });
+}
+
+async function saveDouban(douban) {
+  await chrome.storage.local.set({
+    [STORAGE_KEYS.DOUBAN]: douban
   });
 }
 
@@ -258,6 +259,46 @@ function attachTilt(card) {
   card.addEventListener("mouseleave", onLeave);
 }
 
+function ageTier(ms) {
+  if (!ms) return "age-white";
+  const msPerDay = 24 * 60 * 60 * 1000;
+  const days = Math.max(0, Math.floor((Date.now() - ms) / msPerDay));
+  if (days < 365) return "age-white";
+  if (days < 365 * 2) return "age-green";
+  if (days < 365 * 3) return "age-blue";
+  if (days < 365 * 5) return "age-purple";
+  return "age-gold";
+}
+
+function ratingTier(rating) {
+  if (!rating) return "rating-1";
+  const match = rating.match(/(\d)/);
+  const value = match ? Number(match[1]) : 1;
+  if (value <= 1) return "rating-1";
+  if (value === 2) return "rating-2";
+  if (value === 3) return "rating-3";
+  if (value === 4) return "rating-4";
+  return "rating-5";
+}
+
+function ratingValue(rating) {
+  if (!rating) return 0;
+  const match = rating.match(/(\d)/);
+  const value = match ? Number(match[1]) : 0;
+  return Math.max(0, Math.min(5, value));
+}
+
+function renderStars(container, value) {
+  if (!container) return;
+  container.innerHTML = "";
+  for (let i = 0; i < 5; i += 1) {
+    const span = document.createElement("span");
+    span.className = `star${i < value ? " filled" : ""}`;
+    span.textContent = "★";
+    container.appendChild(span);
+  }
+}
+
 function buildCards(bookmarks, index, stats) {
   const container = document.getElementById("cards");
   const template = document.getElementById("card-template");
@@ -266,7 +307,6 @@ function buildCards(bookmarks, index, stats) {
   for (const item of bookmarks) {
     const clone = template.content.cloneNode(true);
     const card = clone.querySelector(".card");
-    const inner = clone.querySelector(".card-inner");
     const titleEl = clone.querySelector(".title");
     const urlEl = clone.querySelector(".url");
     const pathEl = clone.querySelector(".path");
@@ -276,6 +316,7 @@ function buildCards(bookmarks, index, stats) {
     const likeBtn = clone.querySelector(".btn-like");
     const deleteBtn = clone.querySelector(".btn-delete");
     const bookmarkBtn = clone.querySelector(".bookmark-btn");
+    const ratingEl = clone.querySelector(".rating-stars");
 
     const title = item.title || item.url;
     const path = getPath(item.id, index);
@@ -303,14 +344,15 @@ function buildCards(bookmarks, index, stats) {
       : "";
     favicon.style.backgroundImage = `url('${faviconUrl(item.url)}')`;
     faviconText.textContent = getInitial(title, item.url);
+    if (ratingEl) ratingEl.remove();
 
     async function handleVisit() {
-      const updated = { ...(stats[item.id] || { shows: 0, clicks: 0, likes: 0, dislikes: 0 }) };
+      const updated = { ...(stats[item.id] || { shows: 0, clicks: 0, likes: 0, dislikes: 0, liked: false }) };
       updated.clicks += 1;
       stats[item.id] = updated;
       await saveStats(stats);
     }
- 
+
     card.addEventListener("click", async (event) => {
       const target = event.target;
       if (target.closest("button")) return;
@@ -378,7 +420,7 @@ function buildCards(bookmarks, index, stats) {
       event.stopPropagation();
     });
 
-    attachTilt(card, inner);
+    attachTilt(card);
     container.appendChild(card);
   }
 
@@ -390,11 +432,76 @@ function buildCards(bookmarks, index, stats) {
   });
 }
 
+function buildDoubanCards(items) {
+  const container = document.getElementById("douban-cards");
+  const template = document.getElementById("card-template");
+  container.innerHTML = "";
+
+  if (!items.length) {
+    return;
+  }
+
+  items.forEach((item, index) => {
+    const clone = template.content.cloneNode(true);
+    const card = clone.querySelector(".card");
+    const titleEl = clone.querySelector(".title");
+    const urlEl = clone.querySelector(".url");
+    const pathEl = clone.querySelector(".path");
+    const dateEl = clone.querySelector(".meta-date");
+    const favicon = clone.querySelector(".favicon");
+    const faviconText = clone.querySelector(".favicon-text");
+    const likeBtn = clone.querySelector(".btn-like");
+    const deleteBtn = clone.querySelector(".btn-delete");
+    const bookmarkBtn = clone.querySelector(".bookmark-btn");
+    const ratingEl = clone.querySelector(".rating-stars");
+
+    card.classList.add(ratingTier(item.rating));
+
+    const readMs = item.readDate ? Date.parse(item.readDate) : null;
+    titleEl.textContent = item.title || "";
+    urlEl.textContent = item.comment || "";
+    pathEl.textContent = item.rating || "";
+    dateEl.textContent = readMs
+      ? `读于 ${formatDate(readMs)}（${formatElapsed(readMs)}）`
+      : "";
+    favicon.style.backgroundImage = item.link ? `url('${faviconUrl(item.link)}')` : "";
+    faviconText.textContent = getInitial(item.title, item.link);
+    renderStars(ratingEl, ratingValue(item.rating));
+
+    likeBtn.style.display = "none";
+    deleteBtn.style.display = "none";
+
+    card.addEventListener("click", () => {
+      if (item.link) {
+        window.open(item.link, "_blank", "noopener,noreferrer");
+      }
+    });
+
+    bookmarkBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    attachTilt(card);
+    container.appendChild(card);
+
+    setTimeout(() => {
+      card.classList.add("is-revealed");
+    }, 250 + index * 180);
+  });
+}
+
 function renderFooter(total) {
   const footer = document.getElementById("footer");
   footer.textContent = total
     ? `当前收藏夹条目数：${total}`
     : "没有检测到书签。";
+}
+
+function renderDoubanFooter(total) {
+  const footer = document.getElementById("douban-footer");
+  footer.textContent = total
+    ? `已读书目数：${total}`
+    : "还没有导入豆瓣已读书目。";
 }
 
 async function fillSelection() {
@@ -439,7 +546,7 @@ async function fillSelection() {
   currentSelection = currentSelection.concat(picked);
 
   for (const item of picked) {
-    const record = data.stats[item.id] || { shows: 0, clicks: 0, likes: 0, dislikes: 0 };
+    const record = data.stats[item.id] || { shows: 0, clicks: 0, likes: 0, dislikes: 0, liked: false };
     record.shows += 1;
     data.stats[item.id] = record;
   }
@@ -507,6 +614,19 @@ async function showRandomBookmarks() {
   await fillSelection();
 }
 
+function showRandomDouban() {
+  const total = doubanSelection.length;
+  if (!total) {
+    currentDoubanSelection = [];
+    buildDoubanCards([]);
+    renderDoubanFooter(0);
+    return;
+  }
+  currentDoubanSelection = pickRandomUnique(doubanSelection, 3);
+  buildDoubanCards(currentDoubanSelection);
+  renderDoubanFooter(total);
+}
+
 function setBuildBadge() {
   const badge = document.getElementById("corner-badge");
   if (badge) {
@@ -514,9 +634,97 @@ function setBuildBadge() {
   }
 }
 
+function setupTabs() {
+  const tabs = document.querySelectorAll(".tab-btn");
+  const panels = {
+    bookmarks: document.getElementById("tab-bookmarks"),
+    douban: document.getElementById("tab-douban")
+  };
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      switchTab(tab.dataset.tab);
+    });
+  });
+}
+
+function parseDoubanInput(text) {
+  const trimmed = text.trim();
+  if (!trimmed) return [];
+  if (trimmed.startsWith("[")) {
+    return JSON.parse(trimmed);
+  }
+  return JSON.parse(`[${trimmed.replace(/,\s*$/, "")}]`);
+}
+
+async function handleDoubanImport(file) {
+  const text = await file.text();
+  let data = [];
+  try {
+    data = parseDoubanInput(text);
+  } catch (error) {
+    alert("JSON 格式不正确，请检查后再试。");
+    return;
+  }
+  if (!Array.isArray(data)) {
+    alert("JSON 顶层必须是数组。");
+    return;
+  }
+  doubanSelection = data;
+  await saveDouban(data);
+  showRandomDouban();
+  switchTab("douban");
+}
+
+function bindDoubanImporter() {
+  const fileInput = document.getElementById("douban-file");
+  if (!fileInput) return;
+  fileInput.addEventListener("change", async (event) => {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    await handleDoubanImport(file);
+    fileInput.value = "";
+  });
+}
+
+async function loadDoubanFromStorage() {
+  const data = await chrome.storage.local.get([STORAGE_KEYS.DOUBAN]);
+  const stored = data[STORAGE_KEYS.DOUBAN] || [];
+  doubanSelection = stored;
+  showRandomDouban();
+}
+
+function switchTab(key) {
+  const tabs = document.querySelectorAll(".tab-btn");
+  const panels = {
+    bookmarks: document.getElementById("tab-bookmarks"),
+    douban: document.getElementById("tab-douban")
+  };
+
+  tabs.forEach((btn) => btn.classList.remove("active"));
+  Object.values(panels).forEach((panel) => panel.classList.remove("active"));
+
+  const activeBtn = document.querySelector(`.tab-btn[data-tab=\"${key}\"]`);
+  const activePanel = panels[key];
+  if (activeBtn) activeBtn.classList.add("active");
+  if (activePanel) activePanel.classList.add("active");
+  activeTab = key;
+  const refreshBtn = document.getElementById("refresh-btn");
+  if (refreshBtn) {
+    refreshBtn.textContent = key === "douban" ? "豆瓣再翻三张" : "再翻三张";
+  }
+}
+
 document.getElementById("refresh-btn").addEventListener("click", () => {
-  showRandomBookmarks().catch(() => {});
+  if (activeTab === "douban") {
+    showRandomDouban();
+  } else {
+    showRandomBookmarks().catch(() => {});
+  }
 });
 
 setBuildBadge();
+setupTabs();
+bindDoubanImporter();
 showRandomBookmarks().catch(() => {});
+loadDoubanFromStorage().catch(() => {});
