@@ -4,7 +4,10 @@ const STORAGE_KEYS = {
   LAST_SYNC: "bookmarks_last_sync",
   STATS: "bookmark_stats",
   RECENT: "bookmark_recent_shown",
-  DOUBAN: "douban_reads"
+  DOUBAN_READ: "douban_reads",
+  DOUBAN_WISH: "douban_wish",
+  MOVIE_SEEN: "douban_movie_seen",
+  MOVIE_WISH: "douban_movie_wish"
 };
 
 const RECENT_LIMIT = 60;
@@ -12,12 +15,13 @@ const MIN_BOOKMARKS_FOR_FILTER = 12;
 const UNDO_TIMEOUT = 8000;
 const MAX_TILT = 18;
 const MAX_FLOAT = -16;
-const BUILD_ID = "2026-03-15-tabs";
-let activeTab = "bookmarks";
+const BUILD_ID = "2026-03-16-multi-tabs";
 
 let currentSelection = [];
-let doubanSelection = [];
-let currentDoubanSelection = [];
+let doubanRead = [];
+let doubanWish = [];
+let movieSeen = [];
+let movieWish = [];
 
 function formatDate(ms) {
   if (!ms) return "";
@@ -174,7 +178,10 @@ async function loadData() {
     STORAGE_KEYS.INDEX,
     STORAGE_KEYS.STATS,
     STORAGE_KEYS.RECENT,
-    STORAGE_KEYS.DOUBAN
+    STORAGE_KEYS.DOUBAN_READ,
+    STORAGE_KEYS.DOUBAN_WISH,
+    STORAGE_KEYS.MOVIE_SEEN,
+    STORAGE_KEYS.MOVIE_WISH
   ]);
 
   return {
@@ -182,7 +189,10 @@ async function loadData() {
     index: stored[STORAGE_KEYS.INDEX] || {},
     stats: stored[STORAGE_KEYS.STATS] || {},
     recent: stored[STORAGE_KEYS.RECENT] || [],
-    douban: stored[STORAGE_KEYS.DOUBAN] || []
+    doubanRead: stored[STORAGE_KEYS.DOUBAN_READ] || [],
+    doubanWish: stored[STORAGE_KEYS.DOUBAN_WISH] || [],
+    movieSeen: stored[STORAGE_KEYS.MOVIE_SEEN] || [],
+    movieWish: stored[STORAGE_KEYS.MOVIE_WISH] || []
   };
 }
 
@@ -198,9 +208,9 @@ async function saveRecent(recent) {
   });
 }
 
-async function saveDouban(douban) {
+async function saveSeries(key, data) {
   await chrome.storage.local.set({
-    [STORAGE_KEYS.DOUBAN]: douban
+    [key]: data
   });
 }
 
@@ -432,12 +442,14 @@ function buildCards(bookmarks, index, stats) {
   });
 }
 
-function buildDoubanCards(items) {
-  const container = document.getElementById("douban-cards");
+function buildMediaCards(items, containerId, footerId, label) {
+  const container = document.getElementById(containerId);
   const template = document.getElementById("card-template");
   container.innerHTML = "";
 
   if (!items.length) {
+    const footer = document.getElementById(footerId);
+    if (footer) footer.textContent = `还没有导入${label}。`;
     return;
   }
 
@@ -488,6 +500,9 @@ function buildDoubanCards(items) {
       card.classList.add("is-revealed");
     }, 250 + index * 180);
   });
+
+  const footer = document.getElementById(footerId);
+  if (footer) footer.textContent = `共 ${items.length} 项`;
 }
 
 function renderFooter(total) {
@@ -495,13 +510,6 @@ function renderFooter(total) {
   footer.textContent = total
     ? `当前收藏夹条目数：${total}`
     : "没有检测到书签。";
-}
-
-function renderDoubanFooter(total) {
-  const footer = document.getElementById("douban-footer");
-  footer.textContent = total
-    ? `已读书目数：${total}`
-    : "还没有导入豆瓣已读书目。";
 }
 
 async function fillSelection() {
@@ -614,17 +622,13 @@ async function showRandomBookmarks() {
   await fillSelection();
 }
 
-function showRandomDouban() {
-  const total = doubanSelection.length;
-  if (!total) {
-    currentDoubanSelection = [];
-    buildDoubanCards([]);
-    renderDoubanFooter(0);
+function showRandomSeries(series, containerId, footerId, label) {
+  if (!series.length) {
+    buildMediaCards([], containerId, footerId, label);
     return;
   }
-  currentDoubanSelection = pickRandomUnique(doubanSelection, 3);
-  buildDoubanCards(currentDoubanSelection);
-  renderDoubanFooter(total);
+  const selection = pickRandomUnique(series, 3);
+  buildMediaCards(selection, containerId, footerId, label);
 }
 
 function setBuildBadge() {
@@ -638,17 +642,24 @@ function setupTabs() {
   const tabs = document.querySelectorAll(".tab-btn");
   const panels = {
     bookmarks: document.getElementById("tab-bookmarks"),
-    douban: document.getElementById("tab-douban")
+    "douban-read": document.getElementById("tab-douban-read"),
+    "douban-wish": document.getElementById("tab-douban-wish"),
+    "movie-seen": document.getElementById("tab-movie-seen"),
+    "movie-wish": document.getElementById("tab-movie-wish")
   };
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
-      switchTab(tab.dataset.tab);
+      tabs.forEach((btn) => btn.classList.remove("active"));
+      tab.classList.add("active");
+      Object.values(panels).forEach((panel) => panel.classList.remove("active"));
+      const target = panels[tab.dataset.tab];
+      if (target) target.classList.add("active");
     });
   });
 }
 
-function parseDoubanInput(text) {
+function parseSeriesInput(text) {
   const trimmed = text.trim();
   if (!trimmed) return [];
   if (trimmed.startsWith("[")) {
@@ -657,11 +668,11 @@ function parseDoubanInput(text) {
   return JSON.parse(`[${trimmed.replace(/,\s*$/, "")}]`);
 }
 
-async function handleDoubanImport(file) {
+async function handleSeriesImport(file, key, setter, containerId, footerId, label) {
   const text = await file.text();
   let data = [];
   try {
-    data = parseDoubanInput(text);
+    data = parseSeriesInput(text);
   } catch (error) {
     alert("JSON 格式不正确，请检查后再试。");
     return;
@@ -670,61 +681,105 @@ async function handleDoubanImport(file) {
     alert("JSON 顶层必须是数组。");
     return;
   }
-  doubanSelection = data;
-  await saveDouban(data);
-  showRandomDouban();
-  switchTab("douban");
+  setter(data);
+  await saveSeries(key, data);
+  showRandomSeries(data, containerId, footerId, label);
 }
 
-function bindDoubanImporter() {
-  const fileInput = document.getElementById("douban-file");
+function bindFileInput(id, key, setter, containerId, footerId, label) {
+  const fileInput = document.getElementById(id);
   if (!fileInput) return;
   fileInput.addEventListener("change", async (event) => {
     const file = event.target.files && event.target.files[0];
     if (!file) return;
-    await handleDoubanImport(file);
+    await handleSeriesImport(file, key, setter, containerId, footerId, label);
     fileInput.value = "";
   });
 }
 
-async function loadDoubanFromStorage() {
-  const data = await chrome.storage.local.get([STORAGE_KEYS.DOUBAN]);
-  const stored = data[STORAGE_KEYS.DOUBAN] || [];
-  doubanSelection = stored;
-  showRandomDouban();
+async function loadSeries() {
+  const data = await loadData();
+  doubanRead = data.doubanRead;
+  doubanWish = data.doubanWish;
+  movieSeen = data.movieSeen;
+  movieWish = data.movieWish;
+
+  showRandomSeries(doubanRead, "douban-read-cards", "douban-read-footer", "豆瓣已读");
+  showRandomSeries(doubanWish, "douban-wish-cards", "douban-wish-footer", "豆瓣想读");
+  showRandomSeries(movieSeen, "movie-seen-cards", "movie-seen-footer", "豆瓣看过");
+  showRandomSeries(movieWish, "movie-wish-cards", "movie-wish-footer", "豆瓣想看");
 }
 
-function switchTab(key) {
-  const tabs = document.querySelectorAll(".tab-btn");
-  const panels = {
-    bookmarks: document.getElementById("tab-bookmarks"),
-    douban: document.getElementById("tab-douban")
-  };
-
-  tabs.forEach((btn) => btn.classList.remove("active"));
-  Object.values(panels).forEach((panel) => panel.classList.remove("active"));
-
-  const activeBtn = document.querySelector(`.tab-btn[data-tab=\"${key}\"]`);
-  const activePanel = panels[key];
-  if (activeBtn) activeBtn.classList.add("active");
-  if (activePanel) activePanel.classList.add("active");
-  activeTab = key;
-  const refreshBtn = document.getElementById("refresh-btn");
-  if (refreshBtn) {
-    refreshBtn.textContent = key === "douban" ? "豆瓣再翻三张" : "再翻三张";
-  }
-}
-
-document.getElementById("refresh-btn").addEventListener("click", () => {
-  if (activeTab === "douban") {
-    showRandomDouban();
-  } else {
+function setSeriesButtons() {
+  const refreshBookmarks = document.getElementById("refresh-bookmarks");
+  refreshBookmarks.addEventListener("click", () => {
     showRandomBookmarks().catch(() => {});
-  }
-});
+  });
+
+  document.getElementById("refresh-douban-read").addEventListener("click", () => {
+    showRandomSeries(doubanRead, "douban-read-cards", "douban-read-footer", "豆瓣已读");
+  });
+
+  document.getElementById("refresh-douban-wish").addEventListener("click", () => {
+    showRandomSeries(doubanWish, "douban-wish-cards", "douban-wish-footer", "豆瓣想读");
+  });
+
+  document.getElementById("refresh-movie-seen").addEventListener("click", () => {
+    showRandomSeries(movieSeen, "movie-seen-cards", "movie-seen-footer", "豆瓣看过");
+  });
+
+  document.getElementById("refresh-movie-wish").addEventListener("click", () => {
+    showRandomSeries(movieWish, "movie-wish-cards", "movie-wish-footer", "豆瓣想看");
+  });
+}
 
 setBuildBadge();
 setupTabs();
-bindDoubanImporter();
+setSeriesButtons();
+
+bindFileInput(
+  "douban-read-file",
+  STORAGE_KEYS.DOUBAN_READ,
+  (data) => {
+    doubanRead = data;
+  },
+  "douban-read-cards",
+  "douban-read-footer",
+  "豆瓣已读"
+);
+
+bindFileInput(
+  "douban-wish-file",
+  STORAGE_KEYS.DOUBAN_WISH,
+  (data) => {
+    doubanWish = data;
+  },
+  "douban-wish-cards",
+  "douban-wish-footer",
+  "豆瓣想读"
+);
+
+bindFileInput(
+  "movie-seen-file",
+  STORAGE_KEYS.MOVIE_SEEN,
+  (data) => {
+    movieSeen = data;
+  },
+  "movie-seen-cards",
+  "movie-seen-footer",
+  "豆瓣看过"
+);
+
+bindFileInput(
+  "movie-wish-file",
+  STORAGE_KEYS.MOVIE_WISH,
+  (data) => {
+    movieWish = data;
+  },
+  "movie-wish-cards",
+  "movie-wish-footer",
+  "豆瓣想看"
+);
+
 showRandomBookmarks().catch(() => {});
-loadDoubanFromStorage().catch(() => {});
+loadSeries().catch(() => {});
