@@ -1,0 +1,25 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## 0.2.0 - 2026-05-20
+
+### Features
+- Added "Close Others" button to quickly close all other duplicate Collection Miner tabs.
+- Added one-click "Export Data" and "Import Backup" features to save and restore all imported Douban/Movie records and bookmarks interaction statistics.
+- Improved duplicate tab detection robustness to handle `chrome://newtab/` schemes.
+- Improved page styling with a dark-theme color scheme base to eliminate white background exposure during elastic scrolling bounce.
+
+### Fixes
+- Added `"tabs"` permission in manifest to resolve tab URL detection in the real browser.
+
+---
+
+## 0.1.0 - 2026-03-20
+
+### Features
+- Initial release of Bookmark Miner (Collection Miner).
+- Tabbed interface separating Bookmarks, Douban Books/Movies with custom JSON importing.
+- Classical tarot/playing card design theme with 3D hover tilt effects.
+- Dynamic weighting system (likes/dislikes) and rarity/age lusters.
+- Built-in English and Chinese bilingual support.
