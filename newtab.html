@@ -19,6 +19,12 @@
             </svg>
             <span data-i18n="githubFork">Fork me on GitHub</span>
           </a>
+          <button id="export-data" class="btn export-btn" type="button" style="padding: 6px 12px; font-size: 12px;" data-i18n="exportData">导出数据</button>
+          <label class="btn file-btn import-backup-btn" style="padding: 6px 12px; font-size: 12px;">
+            <span data-i18n="importBackup">导入备份</span>
+            <input id="import-backup-file" type="file" accept="application/json" />
+          </label>
+          <button id="close-others" class="btn close-others-btn" type="button" style="display: none; padding: 6px 12px; font-size: 12px;" data-i18n="closeOthers">关闭其他</button>
           <button id="lang-switch" class="btn lang-switch-btn" type="button" style="padding: 6px 12px; font-size: 12px; min-width: 48px;">EN</button>
         </div>
       </header>

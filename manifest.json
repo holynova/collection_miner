@@ -3,7 +3,7 @@
   "description": "Randomly surface bookmarks on each new tab.",
   "version": "0.1.0",
   "manifest_version": 3,
-  "permissions": ["bookmarks", "storage"],
+  "permissions": ["bookmarks", "storage", "tabs"],
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },

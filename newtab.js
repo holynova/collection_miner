@@ -41,7 +41,10 @@ const I18N = {
     invalidJson: "JSON 格式不正确，请检查后再试。",
     jsonNotArray: "JSON 顶层必须是数组。",
     githubFork: "在 GitHub 上关注我",
-    langCode: "EN"
+    langCode: "EN",
+    closeOthers: "关闭其他标签页",
+    exportData: "导出数据",
+    importBackup: "导入备份"
   },
   en: {
     appTitle: "Bookmark Miner",
@@ -72,7 +75,10 @@ const I18N = {
     invalidJson: "Invalid JSON format.",
     jsonNotArray: "JSON must be an array.",
     githubFork: "Fork me on GitHub",
-    langCode: "中"
+    langCode: "中",
+    closeOthers: "Close Others",
+    exportData: "Export Data",
+    importBackup: "Import Backup"
   }
 };
 
@@ -124,7 +130,7 @@ const MIN_BOOKMARKS_FOR_FILTER = 12;
 const UNDO_TIMEOUT = 8000;
 const MAX_TILT = 18;
 const MAX_FLOAT = -16;
-const BUILD_ID = "2026-03-16-multi-tabs";
+const BUILD_ID = "2026-05-20-backup-restore";
 
 let currentSelection = [];
 let doubanRead = [];
@@ -896,9 +902,188 @@ function setSeriesButtons() {
   });
 }
 
+async function checkDuplicateTabs() {
+  if (typeof chrome === "undefined" || !chrome.tabs) return;
+  try {
+    const extensionUrl = chrome.runtime.getURL("newtab.html");
+    const tabs = await chrome.tabs.query({});
+    const duplicateTabs = tabs.filter(tab => tab.url && tab.url.startsWith(extensionUrl));
+    
+    const closeBtn = document.getElementById("close-others");
+    if (!closeBtn) return;
+    
+    if (duplicateTabs.length > 1) {
+      closeBtn.style.display = "inline-flex";
+    } else {
+      closeBtn.style.display = "none";
+    }
+  } catch (error) {
+    console.error("Failed to check duplicate tabs", error);
+  }
+}
+
+async function closeOtherTabs() {
+  if (typeof chrome === "undefined" || !chrome.tabs) return;
+  try {
+    const extensionUrl = chrome.runtime.getURL("newtab.html");
+    const tabs = await chrome.tabs.query({});
+    const duplicateTabs = tabs.filter(tab => tab.url && tab.url.startsWith(extensionUrl));
+    
+    const currentTab = await chrome.tabs.getCurrent();
+    const currentTabId = currentTab ? currentTab.id : null;
+    
+    const tabsToRemove = duplicateTabs
+      .filter(tab => tab.id !== currentTabId && tab.id !== undefined)
+      .map(tab => tab.id);
+      
+    if (tabsToRemove.length > 0) {
+      await chrome.tabs.remove(tabsToRemove);
+    }
+    
+    const closeBtn = document.getElementById("close-others");
+    if (closeBtn) closeBtn.style.display = "none";
+  } catch (error) {
+    console.error("Failed to close other tabs", error);
+  }
+}
+
+function initDuplicateTabManager() {
+  const closeBtn = document.getElementById("close-others");
+  if (!closeBtn) return;
+  
+  closeBtn.addEventListener("click", () => {
+    closeOtherTabs().catch(() => {});
+  });
+  
+  if (typeof chrome !== "undefined" && chrome.tabs) {
+    chrome.tabs.onCreated.addListener(checkDuplicateTabs);
+    chrome.tabs.onRemoved.addListener(checkDuplicateTabs);
+    chrome.tabs.onUpdated.addListener(checkDuplicateTabs);
+  }
+  
+  checkDuplicateTabs().catch(() => {});
+}
+
+async function exportAllData() {
+  try {
+    const keys = [
+      STORAGE_KEYS.DOUBAN_READ,
+      STORAGE_KEYS.DOUBAN_WISH,
+      STORAGE_KEYS.MOVIE_SEEN,
+      STORAGE_KEYS.MOVIE_WISH,
+      STORAGE_KEYS.STATS,
+      STORAGE_KEYS.RECENT
+    ];
+    const data = await chrome.storage.local.get(keys);
+    
+    const exportObj = {
+      version: "1.0",
+      exportDate: new Date().toISOString(),
+      data: {
+        doubanRead: data[STORAGE_KEYS.DOUBAN_READ] || [],
+        doubanWish: data[STORAGE_KEYS.DOUBAN_WISH] || [],
+        movieSeen: data[STORAGE_KEYS.MOVIE_SEEN] || [],
+        movieWish: data[STORAGE_KEYS.MOVIE_WISH] || [],
+        bookmarkStats: data[STORAGE_KEYS.STATS] || {},
+        recentShown: data[STORAGE_KEYS.RECENT] || []
+      }
+    };
+    
+    const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    
+    const dateStr = formatDate(Date.now());
+    const filename = `collection_miner_backup_${dateStr}.json`;
+    
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Failed to export data", error);
+    alert(currentLang === "zh" ? "导出数据失败：" + error.message : "Failed to export data: " + error.message);
+  }
+}
+
+async function handleBackupImport(file) {
+  const text = await file.text();
+  try {
+    const backup = JSON.parse(text);
+    if (!backup.data) {
+      alert(t("invalidJson"));
+      return;
+    }
+    
+    const d = backup.data;
+    const toSave = {};
+    let count = 0;
+    
+    if (d.doubanRead) {
+      toSave[STORAGE_KEYS.DOUBAN_READ] = d.doubanRead;
+      doubanRead = d.doubanRead;
+      count += d.doubanRead.length;
+    }
+    if (d.doubanWish) {
+      toSave[STORAGE_KEYS.DOUBAN_WISH] = d.doubanWish;
+      doubanWish = d.doubanWish;
+      count += d.doubanWish.length;
+    }
+    if (d.movieSeen) {
+      toSave[STORAGE_KEYS.MOVIE_SEEN] = d.movieSeen;
+      movieSeen = d.movieSeen;
+      count += d.movieSeen.length;
+    }
+    if (d.movieWish) {
+      toSave[STORAGE_KEYS.MOVIE_WISH] = d.movieWish;
+      movieWish = d.movieWish;
+      count += d.movieWish.length;
+    }
+    if (d.bookmarkStats) {
+      toSave[STORAGE_KEYS.STATS] = d.bookmarkStats;
+    }
+    if (d.recentShown) {
+      toSave[STORAGE_KEYS.RECENT] = d.recentShown;
+    }
+    
+    await chrome.storage.local.set(toSave);
+    
+    // Reload UI
+    await loadSeries();
+    
+    alert(currentLang === "zh" ? `导入备份成功！共恢复了 ${count} 条已导入数据。` : `Backup imported successfully! Restored ${count} items.`);
+  } catch (error) {
+    console.error("Failed to import backup", error);
+    alert(t("invalidJson"));
+  }
+}
+
+function initBackupManager() {
+  const exportBtn = document.getElementById("export-data");
+  if (exportBtn) {
+    exportBtn.addEventListener("click", () => {
+      exportAllData().catch(() => {});
+    });
+  }
+  
+  const importInput = document.getElementById("import-backup-file");
+  if (importInput) {
+    importInput.addEventListener("change", async (event) => {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      await handleBackupImport(file);
+      importInput.value = "";
+    });
+  }
+}
+
 setBuildBadge();
 setupTabs();
 setSeriesButtons();
+initDuplicateTabManager();
+initBackupManager();
 
 bindFileInput(
   "douban-read-file",
