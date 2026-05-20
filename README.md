@@ -20,6 +20,9 @@
     -   **氛围动效**：点赞触发粒子效果（五彩纸屑），卡片渐进式入场。
     -   **双语支持 (i18n)**：右上角一键切换中英文界面。
     -   **热键支持**：按下 `Enter` 键即可在当前分类下快速“再翻三张”。
+5.  **辅助管理功能**：
+    -   **关闭重复标签页**：当检测到打开了多个本插件的新标签页时，提供一键“关闭其他”按钮，保持工作区清爽。
+    -   **一键数据备份与恢复**：提供“导出数据”与“导入备份”功能，可将导入的所有豆瓣数据、卡牌权重统计及展示历史备份为本地 JSON 文件，防止卸载或重装插件时数据丢失。
 
 ### 使用说明
 
@@ -29,6 +32,7 @@
     -   可以直接点击卡片打开链接（并记录一次点击）。
     -   左下角星形/心形点赞，增加权重。
     -   右下角垃圾桶可直接删除书签（支持 8 秒内撤销）。
+-   **备份与恢复**：点击右上角“导出数据”保存备份，点击“导入备份”选择导出的 JSON 文件即可一键恢复所有历史数据。
 
 使用截图：
 
@@ -56,6 +60,9 @@ A multi-dimensional, beautifully designed Chrome extension that helps you "mine"
     -   **Micro-animations**: Confetti effects for likes and smooth entrance animations.
     -   **i18n**: Toggle between English and Chinese layouts.
     -   **Hotkeys**: Press `Enter` to quickly refresh 3 cards.
+5.  **Utility Management**:
+    -   **Close Duplicate Tabs**: Automatically detects multiple open Miner tabs and provides a "Close Others" button to keep your workspace neat.
+    -   **One-Click Backup & Restore**: Export all imported data, bookmarks statistics, and history records to a local JSON file, and easily import it back to prevent data loss.
 
 ### How to Use
 
@@ -65,6 +72,7 @@ A multi-dimensional, beautifully designed Chrome extension that helps you "mine"
     -   Directly click a card to open the link (counts as a click).
     -   Click the Star/Heart icon to like and increase weight.
     -   Click the Trash icon to delete from bookmarks (with an 8-second undo window).
+-   **Backup & Restore**: Use "Export Data" in the top right header to save your data, and use "Import Backup" to restore from your exported JSON file.
 
 ## 安装 / Install
 

@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   font-family: "Cinzel", "Trajan Pro", "Times New Roman", serif;
   --bg-deep: #1b2f26;
   --bg-mid: #2f5e4c;
@@ -16,7 +16,8 @@
   --blue: #2aa2d5;
   --cyan: #3bc0c8;
   --shadow: rgba(0, 0, 0, 0.55);
-  background: radial-gradient(circle at top, var(--bg-light), var(--bg-mid) 55%, var(--bg-deep));
+  background-color: var(--bg-deep);
+  background-image: radial-gradient(circle at top, var(--bg-light), var(--bg-mid) 55%, var(--bg-deep));
   color: var(--text-main);
 }
 

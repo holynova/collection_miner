@@ -130,7 +130,7 @@ const MIN_BOOKMARKS_FOR_FILTER = 12;
 const UNDO_TIMEOUT = 8000;
 const MAX_TILT = 18;
 const MAX_FLOAT = -16;
-const BUILD_ID = "2026-05-20-backup-restore";
+const BUILD_ID = "2026-05-20-debug-tabs";
 
 let currentSelection = [];
 let doubanRead = [];
@@ -907,7 +907,15 @@ async function checkDuplicateTabs() {
   try {
     const extensionUrl = chrome.runtime.getURL("newtab.html");
     const tabs = await chrome.tabs.query({});
-    const duplicateTabs = tabs.filter(tab => tab.url && tab.url.startsWith(extensionUrl));
+    
+    // Filter tabs running this extension or generic chrome://newtab
+    const duplicateTabs = tabs.filter(tab => {
+      if (!tab.url) return false;
+      return tab.url.startsWith(extensionUrl) || tab.url.startsWith("chrome://newtab");
+    });
+    
+    console.log("[DEBUG] All tabs queried:", tabs.map(t => ({ id: t.id, url: t.url })));
+    console.log("[DEBUG] Duplicate tabs detected:", duplicateTabs.map(t => ({ id: t.id, url: t.url })));
     
     const closeBtn = document.getElementById("close-others");
     if (!closeBtn) return;
@@ -927,7 +935,10 @@ async function closeOtherTabs() {
   try {
     const extensionUrl = chrome.runtime.getURL("newtab.html");
     const tabs = await chrome.tabs.query({});
-    const duplicateTabs = tabs.filter(tab => tab.url && tab.url.startsWith(extensionUrl));
+    const duplicateTabs = tabs.filter(tab => {
+      if (!tab.url) return false;
+      return tab.url.startsWith(extensionUrl) || tab.url.startsWith("chrome://newtab");
+    });
     
     const currentTab = await chrome.tabs.getCurrent();
     const currentTabId = currentTab ? currentTab.id : null;
