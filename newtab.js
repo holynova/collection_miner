@@ -14,16 +14,17 @@ const STORAGE_KEYS = {
 const I18N = {
   zh: {
     appTitle: "收藏夹淘金",
-    tabBookmarks: "浏览器收藏夹",
-    tabDoubanRead: "豆瓣已读",
-    tabDoubanWish: "豆瓣想读",
-    tabMovieSeen: "豆瓣看过电影",
-    tabMovieWish: "豆瓣想看电影",
-    refreshBtn: "再翻三张",
-    importDoubanRead: "导入豆瓣已读",
-    importDoubanWish: "导入豆瓣想读",
-    importMovieSeen: "导入豆瓣看过",
-    importMovieWish: "导入豆瓣想看",
+    tabBookmarks: "收藏夹",
+    tabDoubanRead: "已读",
+    tabDoubanWish: "想读",
+    tabMovieSeen: "看过",
+    tabMovieWish: "想看",
+    refreshBtn: "再翻三张 ⏎",
+    refreshLoading: "翻牌中…",
+    importDoubanRead: "导入已读",
+    importDoubanWish: "导入想读",
+    importMovieSeen: "导入看过",
+    importMovieWish: "导入想看",
     uncategorized: "未分类",
     addedOn: "添加于 {0}（{1}）",
     readOn: "读于 {0}（{1}）",
@@ -34,30 +35,32 @@ const I18N = {
     deleteConfirm: "确定要从收藏夹里删除这条吗？",
     deleted1: "已删除 1 条书签",
     undo: "撤销",
-    noImportYet: "还没有导入{0}。",
+    noImportYet: "还没有导入{0}数据。",
     totalItems: "共 {0} 项",
-    totalBookmarks: "当前收藏夹条目数：{0}",
+    totalBookmarks: "收藏夹共 {0} 条",
     noBookmarks: "没有检测到书签。",
     invalidJson: "JSON 格式不正确，请检查后再试。",
     jsonNotArray: "JSON 顶层必须是数组。",
-    githubFork: "在 GitHub 上关注我",
     langCode: "EN",
     closeOthers: "关闭其他标签页",
     exportData: "导出数据",
-    importBackup: "导入备份"
+    importBackup: "导入备份",
+    emptyStateIcon: "📂",
+    emptyStateText: "还没有导入{0}数据。\n点击上方按钮导入 JSON 文件开始探索！"
   },
   en: {
     appTitle: "Bookmark Miner",
     tabBookmarks: "Bookmarks",
-    tabDoubanRead: "Books Read",
-    tabDoubanWish: "Books Wishlist",
-    tabMovieSeen: "Movies Seen",
-    tabMovieWish: "Movies Wishlist",
-    refreshBtn: "Show 3 more",
-    importDoubanRead: "Import Books Read",
-    importDoubanWish: "Import Books Wishlist",
-    importMovieSeen: "Import Movies Seen",
-    importMovieWish: "Import Movies Wishlist",
+    tabDoubanRead: "Read",
+    tabDoubanWish: "Wishlist",
+    tabMovieSeen: "Watched",
+    tabMovieWish: "To Watch",
+    refreshBtn: "Show 3 more ⏎",
+    refreshLoading: "Loading…",
+    importDoubanRead: "Import Read",
+    importDoubanWish: "Import Wishlist",
+    importMovieSeen: "Import Watched",
+    importMovieWish: "Import To Watch",
     uncategorized: "Uncategorized",
     addedOn: "Added {0} ({1})",
     readOn: "Read {0} ({1})",
@@ -68,17 +71,18 @@ const I18N = {
     deleteConfirm: "Are you sure you want to delete this bookmark?",
     deleted1: "Deleted 1 bookmark",
     undo: "Undo",
-    noImportYet: "No {0} imported yet.",
+    noImportYet: "No {0} data imported yet.",
     totalItems: "Total: {0}",
-    totalBookmarks: "Total bookmarks: {0}",
+    totalBookmarks: "Bookmarks: {0}",
     noBookmarks: "No bookmarks detected.",
     invalidJson: "Invalid JSON format.",
     jsonNotArray: "JSON must be an array.",
-    githubFork: "Fork me on GitHub",
     langCode: "中",
     closeOthers: "Close Others",
     exportData: "Export Data",
-    importBackup: "Import Backup"
+    importBackup: "Import Backup",
+    emptyStateIcon: "📂",
+    emptyStateText: "No {0} data imported yet.\nClick the import button above to get started!"
   }
 };
 
@@ -130,7 +134,7 @@ const MIN_BOOKMARKS_FOR_FILTER = 12;
 const UNDO_TIMEOUT = 8000;
 const MAX_TILT = 18;
 const MAX_FLOAT = -16;
-const BUILD_ID = "2026-05-20-debug-tabs";
+const BUILD_ID = "2026-05-21-ui-overhaul";
 
 let currentSelection = [];
 let doubanRead = [];
@@ -463,7 +467,6 @@ function createCardElement(item, nodeIndex, stats) {
   const faviconText = clone.querySelector(".favicon-text");
   const likeBtn = clone.querySelector(".btn-like");
   const deleteBtn = clone.querySelector(".btn-delete");
-  const bookmarkBtn = clone.querySelector(".bookmark-btn");
   const ratingEl = clone.querySelector(".rating-stars");
 
   const title = item.title || item.url;
@@ -481,7 +484,7 @@ function createCardElement(item, nodeIndex, stats) {
   card.classList.add(rarity);
   card.classList.add(ageTier(item.dateAdded));
   if (record.liked) {
-    bookmarkBtn.classList.add("is-liked");
+    likeBtn.classList.add("is-liked");
   }
 
   titleEl.textContent = title;
@@ -514,11 +517,11 @@ function createCardElement(item, nodeIndex, stats) {
     if (updated.liked) {
       updated.liked = false;
       updated.likes = Math.max(0, updated.likes - 1);
-      bookmarkBtn.classList.remove("is-liked");
+      likeBtn.classList.remove("is-liked");
     } else {
       updated.liked = true;
       updated.likes += 1;
-      bookmarkBtn.classList.add("is-liked");
+      likeBtn.classList.add("is-liked");
       showConfetti(event.clientX, event.clientY);
     }
     stats[item.id] = updated;
@@ -565,17 +568,27 @@ function createCardElement(item, nodeIndex, stats) {
     }
   });
 
-  bookmarkBtn.addEventListener("click", (event) => {
-    event.stopPropagation();
-  });
-
   attachTilt(card);
   return card;
+}
+
+function renderEmptyState(container, labelKey) {
+  container.innerHTML = `
+    <div class="empty-state">
+      <div class="empty-state-icon">${t("emptyStateIcon")}</div>
+      <div class="empty-state-text">${t("emptyStateText", t(labelKey)).replace(/\n/g, "<br>")}</div>
+    </div>
+  `;
 }
 
 function buildCards(bookmarks, nodeIndex, stats) {
   const container = document.getElementById("cards");
   container.innerHTML = "";
+
+  if (!bookmarks || !bookmarks.length) {
+    renderEmptyState(container, "tabBookmarks");
+    return;
+  }
 
   for (const item of bookmarks) {
     const card = createCardElement(item, nodeIndex, stats);
@@ -595,9 +608,10 @@ function buildMediaCards(items, containerId, footerId, label) {
   const template = document.getElementById("card-template");
   container.innerHTML = "";
 
-  if (!items.length) {
+  if (!items || !items.length) {
     const footer = document.getElementById(footerId);
     if (footer) footer.textContent = t("noImportYet", t(label));
+    renderEmptyState(container, label);
     return;
   }
 
@@ -610,10 +624,8 @@ function buildMediaCards(items, containerId, footerId, label) {
     const dateEl = clone.querySelector(".meta-date");
     const favicon = clone.querySelector(".favicon");
     const faviconText = clone.querySelector(".favicon-text");
-    const likeBtn = clone.querySelector(".btn-like");
-    const deleteBtn = clone.querySelector(".btn-delete");
-    const bookmarkBtn = clone.querySelector(".bookmark-btn");
     const ratingEl = clone.querySelector(".rating-stars");
+    const toolbarEl = clone.querySelector(".card-toolbar");
 
     card.classList.add(ratingTier(item.rating));
 
@@ -633,17 +645,12 @@ function buildMediaCards(items, containerId, footerId, label) {
     faviconText.textContent = getInitial(item.title, item.link);
     renderStars(ratingEl, ratingValue(item.rating));
 
-    likeBtn.style.display = "none";
-    deleteBtn.style.display = "none";
+    if (toolbarEl) toolbarEl.style.display = "none";
 
     card.addEventListener("click", () => {
       if (item.link) {
         window.open(item.link, "_blank", "noopener,noreferrer");
       }
-    });
-
-    bookmarkBtn.addEventListener("click", (event) => {
-      event.stopPropagation();
     });
 
     attachTilt(card);
@@ -786,12 +793,41 @@ async function replaceDeletedCard(deletedId) {
   renderFooter(total);
 }
 
+function animateFlyOut(container) {
+  return new Promise((resolve) => {
+    const cards = Array.from(container.querySelectorAll(".card"));
+    if (cards.length === 0) {
+      resolve();
+      return;
+    }
+
+    // Flip face down sequentially
+    cards.forEach((card, index) => {
+      setTimeout(() => {
+        card.classList.remove("is-revealed");
+      }, index * 60);
+    });
+
+    // Wait for the flip animation (400ms transition from CSS) + stagger
+    const totalDelay = (cards.length - 1) * 60 + 400;
+    setTimeout(resolve, totalDelay);
+  });
+}
+
 async function showRandomBookmarks() {
+  const container = document.getElementById("cards");
+  if (container) {
+    await animateFlyOut(container);
+  }
   currentSelection = [];
   await fillSelection();
 }
 
-function showRandomSeries(series, containerId, footerId, label) {
+async function showRandomSeries(series, containerId, footerId, label) {
+  const container = document.getElementById(containerId);
+  if (container && series.length) {
+    await animateFlyOut(container);
+  }
   if (!series.length) {
     buildMediaCards([], containerId, footerId, label);
     return;
@@ -879,27 +915,31 @@ async function loadSeries() {
   showRandomSeries(movieWish, "movie-wish-cards", "movie-wish-footer", "tabMovieWish");
 }
 
+function withLoading(btnId, asyncFn) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.addEventListener("click", async () => {
+    if (btn.classList.contains("is-loading")) return;
+    const originalText = btn.textContent;
+    btn.textContent = t("refreshLoading");
+    btn.classList.add("is-loading");
+    try {
+      await asyncFn();
+    } catch (err) {
+      // ignore
+    } finally {
+      btn.textContent = originalText;
+      btn.classList.remove("is-loading");
+    }
+  });
+}
+
 function setSeriesButtons() {
-  const refreshBookmarks = document.getElementById("refresh-bookmarks");
-  refreshBookmarks.addEventListener("click", () => {
-    showRandomBookmarks().catch(() => {});
-  });
-
-  document.getElementById("refresh-douban-read").addEventListener("click", () => {
-    showRandomSeries(doubanRead, "douban-read-cards", "douban-read-footer", "tabDoubanRead");
-  });
-
-  document.getElementById("refresh-douban-wish").addEventListener("click", () => {
-    showRandomSeries(doubanWish, "douban-wish-cards", "douban-wish-footer", "tabDoubanWish");
-  });
-
-  document.getElementById("refresh-movie-seen").addEventListener("click", () => {
-    showRandomSeries(movieSeen, "movie-seen-cards", "movie-seen-footer", "tabMovieSeen");
-  });
-
-  document.getElementById("refresh-movie-wish").addEventListener("click", () => {
-    showRandomSeries(movieWish, "movie-wish-cards", "movie-wish-footer", "tabMovieWish");
-  });
+  withLoading("refresh-bookmarks", () => showRandomBookmarks());
+  withLoading("refresh-douban-read", () => showRandomSeries(doubanRead, "douban-read-cards", "douban-read-footer", "tabDoubanRead"));
+  withLoading("refresh-douban-wish", () => showRandomSeries(doubanWish, "douban-wish-cards", "douban-wish-footer", "tabDoubanWish"));
+  withLoading("refresh-movie-seen", () => showRandomSeries(movieSeen, "movie-seen-cards", "movie-seen-footer", "tabMovieSeen"));
+  withLoading("refresh-movie-wish", () => showRandomSeries(movieWish, "movie-wish-cards", "movie-wish-footer", "tabMovieWish"));
 }
 
 async function checkDuplicateTabs() {
@@ -1071,6 +1111,23 @@ async function handleBackupImport(file) {
   }
 }
 
+function initMoreMenu() {
+  const toggleBtn = document.getElementById("more-menu-btn");
+  const menu = document.getElementById("more-menu");
+  if (!toggleBtn || !menu) return;
+
+  toggleBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    menu.style.display = menu.style.display === "none" ? "block" : "none";
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!menu.contains(event.target) && event.target !== toggleBtn) {
+      menu.style.display = "none";
+    }
+  });
+}
+
 function initBackupManager() {
   const exportBtn = document.getElementById("export-data");
   if (exportBtn) {
@@ -1095,6 +1152,7 @@ setupTabs();
 setSeriesButtons();
 initDuplicateTabManager();
 initBackupManager();
+initMoreMenu();
 
 bindFileInput(
   "douban-read-file",

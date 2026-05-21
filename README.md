@@ -18,9 +18,12 @@
 4.  **交互体验**：
     -   **3D 悬浮效果**：卡片随鼠标倾斜，充满质感。
     -   **氛围动效**：点赞触发粒子效果（五彩纸屑），卡片渐进式入场。
+    -   **动画重写 (Flip Animation)**：卡片采用无缝翻转进出场动画。
     -   **双语支持 (i18n)**：右上角一键切换中英文界面。
     -   **热键支持**：按下 `Enter` 键即可在当前分类下快速“再翻三张”。
 5.  **辅助管理功能**：
+    -   **更多菜单 (More Menu)**：将备份、导出、关闭重复标签页等功能收纳在“更多”菜单中，保持界面清爽。
+    -   **空状态提示 (Empty States)**：在没有导入数据时，提供更直观的空状态占位图和操作指引。
     -   **关闭重复标签页**：当检测到打开了多个本插件的新标签页时，提供一键“关闭其他”按钮，保持工作区清爽。
     -   **一键数据备份与恢复**：提供“导出数据”与“导入备份”功能，可将导入的所有豆瓣数据、卡牌权重统计及展示历史备份为本地 JSON 文件，防止卸载或重装插件时数据丢失。
 
@@ -58,9 +61,12 @@ A multi-dimensional, beautifully designed Chrome extension that helps you "mine"
 4.  **Interactive Experience**:
     -   **3D Tilt Effect**: Cards tilt and float based on mouse movement.
     -   **Micro-animations**: Confetti effects for likes and smooth entrance animations.
+    -   **Flip Animations**: Seamless flip-in and flip-out animations for a natural card dealing feel.
     -   **i18n**: Toggle between English and Chinese layouts.
     -   **Hotkeys**: Press `Enter` to quickly refresh 3 cards.
 5.  **Utility Management**:
+    -   **More Menu**: Actions like backup, export, and closing duplicate tabs are grouped in a clean dropdown menu.
+    -   **Empty States**: Clear and beautiful empty state placeholders when data hasn't been imported yet.
     -   **Close Duplicate Tabs**: Automatically detects multiple open Miner tabs and provides a "Close Others" button to keep your workspace neat.
     -   **One-Click Backup & Restore**: Export all imported data, bookmarks statistics, and history records to a local JSON file, and easily import it back to prevent data loss.
 
