@@ -807,7 +807,30 @@ h1 {
   100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0) rotate(var(--dr)); opacity: 0; }
 }
 
+/* Card exit animations */
+@keyframes refreshFlipOut {
+  0% { transform: rotateY(180deg) rotateZ(0deg); }
+  100% { transform: rotateY(270deg) rotateZ(0deg); }
+}
 
+.card.is-refresh-exiting .card-inner {
+  animation: refreshFlipOut 0.15s ease-in both;
+}
+
+.card.is-refresh-entering .card-inner {
+  transform: rotateY(90deg);
+}
+
+@keyframes refreshFlipIn {
+  0% { transform: rotateY(90deg) rotateZ(0deg); }
+  70% { transform: rotateY(185deg) rotateZ(0.5deg); }
+  100% { transform: rotateY(180deg) rotateZ(0deg); }
+}
+
+.card.is-refresh-revealed .card-inner {
+  transform: rotateY(180deg);
+  animation: refreshFlipIn 0.35s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+}
 
 /* ===== Responsive ===== */
 

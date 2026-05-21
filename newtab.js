@@ -583,6 +583,7 @@ function renderEmptyState(container, labelKey) {
 
 function buildCards(bookmarks, nodeIndex, stats) {
   const container = document.getElementById("cards");
+  const isRefresh = container.childElementCount > 0 && !container.querySelector(".empty-state");
   container.innerHTML = "";
 
   if (!bookmarks || !bookmarks.length) {
@@ -592,19 +593,28 @@ function buildCards(bookmarks, nodeIndex, stats) {
 
   for (const item of bookmarks) {
     const card = createCardElement(item, nodeIndex, stats);
+    if (isRefresh) {
+      card.classList.add("is-refresh-entering");
+    }
     container.appendChild(card);
   }
 
   const cards = Array.from(container.querySelectorAll(".card"));
   cards.forEach((card, index) => {
     setTimeout(() => {
-      card.classList.add("is-revealed");
-    }, 250 + index * 180);
+      if (isRefresh) {
+        card.classList.remove("is-refresh-entering");
+        card.classList.add("is-refresh-revealed");
+      } else {
+        card.classList.add("is-revealed");
+      }
+    }, isRefresh ? (index * 40) : (250 + index * 180));
   });
 }
 
-function buildMediaCards(items, containerId, footerId, label) {
+function buildMediaCards(items, containerId, footerId, label, totalCount = 0) {
   const container = document.getElementById(containerId);
+  const isRefresh = container.childElementCount > 0 && !container.querySelector(".empty-state");
   const template = document.getElementById("card-template");
   container.innerHTML = "";
 
@@ -628,6 +638,9 @@ function buildMediaCards(items, containerId, footerId, label) {
     const toolbarEl = clone.querySelector(".card-toolbar");
 
     card.classList.add(ratingTier(item.rating));
+    if (isRefresh) {
+      card.classList.add("is-refresh-entering");
+    }
 
     const readMs = item.readDate ? Date.parse(item.readDate) : null;
     titleEl.textContent = item.title || "";
@@ -657,12 +670,17 @@ function buildMediaCards(items, containerId, footerId, label) {
     container.appendChild(card);
 
     setTimeout(() => {
-      card.classList.add("is-revealed");
-    }, 250 + index * 180);
+      if (isRefresh) {
+        card.classList.remove("is-refresh-entering");
+        card.classList.add("is-refresh-revealed");
+      } else {
+        card.classList.add("is-revealed");
+      }
+    }, isRefresh ? (index * 40) : (250 + index * 180));
   });
 
   const footer = document.getElementById(footerId);
-  if (footer) footer.textContent = t("totalItems", items.length);
+  if (footer) footer.textContent = t("totalItems", totalCount || items.length);
 }
 
 function renderFooter(total) {
@@ -801,15 +819,17 @@ function animateFlyOut(container) {
       return;
     }
 
-    // Flip face down sequentially
+    // Flip to edge (90deg) sequentially
     cards.forEach((card, index) => {
       setTimeout(() => {
         card.classList.remove("is-revealed");
-      }, index * 60);
+        card.classList.remove("is-refresh-revealed");
+        card.classList.add("is-refresh-exiting");
+      }, index * 40);
     });
 
-    // Wait for the flip animation (400ms transition from CSS) + stagger
-    const totalDelay = (cards.length - 1) * 60 + 400;
+    // Wait for the flip animation (150ms transition from CSS) + stagger
+    const totalDelay = (cards.length - 1) * 40 + 150;
     setTimeout(resolve, totalDelay);
   });
 }
@@ -832,8 +852,8 @@ async function showRandomSeries(series, containerId, footerId, label) {
     buildMediaCards([], containerId, footerId, label);
     return;
   }
-  const selection = pickRandomUnique(series, 3);
-  buildMediaCards(selection, containerId, footerId, label);
+  const picked = pickRandomUnique(series, 3);
+  buildMediaCards(picked, containerId, footerId, label, series.length);
 }
 
 function setBuildBadge() {
