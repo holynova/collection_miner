@@ -209,8 +209,8 @@ h1 {
 }
 
 .tab-btn {
-  border: 1px solid rgba(214, 162, 74, 0.4);
-  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid transparent;
+  background: transparent;
   color: var(--text-dim);
   padding: 8px 18px;
   border-radius: 999px;
@@ -218,22 +218,23 @@ h1 {
   font-family: inherit;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   position: relative;
+  opacity: 0.6;
 }
 
 .tab-btn:hover {
-  background: rgba(214, 162, 74, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--text-main);
-  border-color: rgba(214, 162, 74, 0.6);
+  opacity: 1;
 }
 
 .tab-btn.active {
-  border-color: var(--gold-bright);
-  background: rgba(214, 162, 74, 0.2);
+  border-color: rgba(214, 162, 74, 0.3);
+  background: rgba(214, 162, 74, 0.08);
   color: var(--gold-bright);
-  font-weight: 700;
-  box-shadow: 0 0 12px rgba(214, 162, 74, 0.15);
+  font-weight: 500;
+  opacity: 1;
 }
 
 /* ===== Tab Panels ===== */
@@ -264,33 +265,32 @@ h1 {
 /* ===== Buttons ===== */
 
 .btn {
-  border: 2px solid var(--gold);
-  background: linear-gradient(145deg, #4a2e14, #2a1a0c);
-  color: var(--text-main);
-  padding: 10px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-dim);
+  padding: 8px 20px;
   font-size: 13px;
   font-family: inherit;
   border-radius: 999px;
   cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
+  backdrop-filter: blur(4px);
 }
 
 .btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 24px rgba(214, 162, 74, 0.2);
+  background: rgba(214, 162, 74, 0.08);
+  border-color: rgba(214, 162, 74, 0.4);
+  color: var(--gold-bright);
 }
 
 .btn:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transform: scale(0.98);
 }
 
 .btn.is-loading {
@@ -557,18 +557,25 @@ h1 {
 }
 
 .toolbar-btn {
-  border: 1px solid rgba(214, 162, 74, 0.35);
-  background: rgba(0, 0, 0, 0.2);
-  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-dim);
   width: 32px;
   height: 32px;
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s ease;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.toolbar-btn:hover {
+  background: rgba(214, 162, 74, 0.1);
+  color: var(--gold-bright);
+  border-color: rgba(214, 162, 74, 0.4);
 }
 
 .toolbar-btn.btn-like {
@@ -987,4 +994,46 @@ body.layout-c .card-footer {
   border-top: 1px dashed rgba(255, 255, 255, 0.2);
   padding-top: 12px;
   margin-top: auto;
+}
+
+/* ===== Bug Fixes & Minor Tweaks ===== */
+
+/* Fix 1: Word wrapping in cards */
+.card {
+  min-width: 0;
+}
+.title, .url, .path, .tag {
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* Fix 2: De-emphasize title */
+.app-title-wrapper {
+  display: flex;
+  align-items: center;
+}
+.app-logo {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-dim);
+  opacity: 0.35;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* Fix 3: Douban Icon */
+.douban-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  background: #007722;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 10px;
+  border-radius: 3px;
+  margin-right: 6px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1;
 }

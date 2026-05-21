@@ -1189,7 +1189,7 @@ function initLayoutSelect() {
   if (!selectEl) return;
 
   chrome.storage.local.get("cardLayout", (res) => {
-    const layout = res.cardLayout || "layout-default";
+    const layout = res.cardLayout || "layout-a";
     selectEl.value = layout;
     document.body.className = document.body.className.replace(/layout-\w+/g, "").trim();
     if (layout !== "layout-default") {
