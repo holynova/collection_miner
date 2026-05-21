@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.3.0 - 2026-05-21
+
+### Features
+- **UI Overhaul**: Redesigned tab layouts, refined typography, and adjusted information density for a premium visual experience.
+- **More Menu**: Grouped secondary actions (export, backup, close others) into a clean, unified dropdown menu.
+- **Empty States**: Added beautiful empty state placeholders for tabs without imported data.
+- **Animations**: Refined the "Refresh" (再翻三张) animation to feature a seamless 3D flip effect.
+- **Interactivity**: Added a loading state (debounce) to refresh buttons and supported pressing Enter to quickly fetch new cards.
+
+---
+
 ## 0.2.0 - 2026-05-20
 
 ### Features
