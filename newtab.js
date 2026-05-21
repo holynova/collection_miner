@@ -45,6 +45,11 @@ const I18N = {
     closeOthers: "关闭其他标签页",
     exportData: "导出数据",
     importBackup: "导入备份",
+    layoutLabel: "卡面排版",
+    layoutDefault: "默认风格",
+    layoutA: "现代杂志风",
+    layoutB: "优雅书封风",
+    layoutC: "档案索引卡",
     emptyStateIcon: "📂",
     emptyStateText: "还没有导入{0}数据。\n点击上方按钮导入 JSON 文件开始探索！"
   },
@@ -81,6 +86,11 @@ const I18N = {
     closeOthers: "Close Others",
     exportData: "Export Data",
     importBackup: "Import Backup",
+    layoutLabel: "Layout Style",
+    layoutDefault: "Default",
+    layoutA: "Modern Magazine",
+    layoutB: "Editorial Cover",
+    layoutC: "Data Index",
     emptyStateIcon: "📂",
     emptyStateText: "No {0} data imported yet.\nClick the import button above to get started!"
   }
@@ -1174,6 +1184,29 @@ initDuplicateTabManager();
 initBackupManager();
 initMoreMenu();
 
+function initLayoutSelect() {
+  const selectEl = document.getElementById("layout-select");
+  if (!selectEl) return;
+
+  chrome.storage.local.get("cardLayout", (res) => {
+    const layout = res.cardLayout || "layout-default";
+    selectEl.value = layout;
+    document.body.className = document.body.className.replace(/layout-\w+/g, "").trim();
+    if (layout !== "layout-default") {
+      document.body.classList.add(layout);
+    }
+  });
+
+  selectEl.addEventListener("change", (e) => {
+    const layout = e.target.value;
+    chrome.storage.local.set({ cardLayout: layout });
+    document.body.className = document.body.className.replace(/layout-\w+/g, "").trim();
+    if (layout !== "layout-default") {
+      document.body.classList.add(layout);
+    }
+  });
+}
+
 bindFileInput(
   "douban-read-file",
   STORAGE_KEYS.DOUBAN_READ,
@@ -1221,6 +1254,7 @@ bindFileInput(
 showRandomBookmarks().catch(() => {});
 loadSeries().catch(() => {});
 initLang().catch(() => {});
+initLayoutSelect();
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
