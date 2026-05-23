@@ -573,22 +573,37 @@ function ageTier(ms) {
   return "age-gold";
 }
 
+function ratingValue(rating) {
+  if (!rating) return 0;
+  const ratingStr = String(rating).trim();
+  
+  const digitMatch = ratingStr.match(/(\d)/);
+  if (digitMatch) {
+    const val = Number(digitMatch[1]);
+    return Math.max(0, Math.min(5, val));
+  }
+  
+  if (ratingStr.includes("力荐")) return 5;
+  if (ratingStr.includes("推荐")) return 4;
+  if (ratingStr.includes("还行")) return 3;
+  if (ratingStr.includes("较差")) return 2;
+  if (ratingStr.includes("很差")) return 1;
+  
+  const starCount = (ratingStr.match(/★/g) || []).length;
+  if (starCount > 0) {
+    return Math.min(5, starCount);
+  }
+  
+  return 0;
+}
+
 function ratingTier(rating) {
-  if (!rating) return "rating-1";
-  const match = String(rating).match(/(\d)/);
-  const value = match ? Number(match[1]) : 1;
+  const value = ratingValue(rating);
   if (value <= 1) return "rating-1";
   if (value === 2) return "rating-2";
   if (value === 3) return "rating-3";
   if (value === 4) return "rating-4";
   return "rating-5";
-}
-
-function ratingValue(rating) {
-  if (!rating) return 0;
-  const match = String(rating).match(/(\d)/);
-  const value = match ? Number(match[1]) : 0;
-  return Math.max(0, Math.min(5, value));
 }
 
 function renderStars(container, value) {

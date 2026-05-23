@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.3.4 - 2026-05-23
+
+### Fixes
+- **Movie Rating Stars Display**: Fixed rating parsing logic to support star strings (e.g. `"★★★★★"`) and Douban Chinese recommendation keywords (e.g. `"力荐"`), resolving the bug where 5-star items displayed empty rating stars and incorrect borders.
+
+---
+
 ## 0.3.3 - 2026-05-23
 
 ### Features
