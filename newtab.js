@@ -174,7 +174,7 @@ const I18N = {
     emptyStateIcon: "📂",
     emptyStateText: "还没有导入{0}数据。\n点击上方按钮导入 JSON 文件开始探索！",
     importHelpTitle: "数据格式与导入教程",
-    importHelpIntro: "支持导入 JSON 数组文件。建议使用开发者推荐的 <a href='https://github.com/holynova/scrape-to-markdown' target='_blank'>scrape-to-markdown</a> 浏览器插件来一键抓取并导出您的豆瓣数据。"
+    importHelpIntro: "支持导入 JSON 数组文件。建议使用开发者推荐的 <a href='https://github.com/holynova/scrape-to-markdown.chrome' target='_blank'>scrape-to-markdown</a> 浏览器插件来一键抓取并导出您的豆瓣数据。"
   },
   en: {
     appTitle: "Bookmark Miner",
@@ -217,7 +217,7 @@ const I18N = {
     emptyStateIcon: "📂",
     emptyStateText: "No {0} data imported yet.\nClick the import button above to get started!",
     importHelpTitle: "Data Format & Import Tutorial",
-    importHelpIntro: "Supports importing JSON array files. We recommend using the developer's <a href='https://github.com/holynova/scrape-to-markdown' target='_blank'>scrape-to-markdown</a> browser extension to scrape and export your Douban data easily."
+    importHelpIntro: "Supports importing JSON array files. We recommend using the developer's <a href='https://github.com/holynova/scrape-to-markdown.chrome' target='_blank'>scrape-to-markdown</a> browser extension to scrape and export your Douban data easily."
   }
 };
 

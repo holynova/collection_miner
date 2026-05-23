@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.3.5 - 2026-05-23
+
+### Fixes
+- **Project Link Fix**: Corrected the recommended project repository URL from `scrape-to-markdown` to `scrape-to-markdown.chrome` in the Douban import tutorials.
+
+---
+
 ## 0.3.4 - 2026-05-23
 
 ### Fixes
