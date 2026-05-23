@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.3.3 - 2026-05-23
+
+### Features
+- **Import Help Tutorial Panels**: Added collapsible info boxes next to the Douban file input labels showing the expected JSON layout and recommending the [scrape-to-markdown](https://github.com/holynova/scrape-to-markdown) Chrome extension.
+- **Movie Title Optimization**: Modified the movie tabs card display to parse slash-separated movie titles and place foreign/secondary titles in a smaller secondary line below the main title.
+
+---
+
 ## 0.3.2 - 2026-05-23
 
 ### Features

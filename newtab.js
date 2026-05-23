@@ -172,7 +172,9 @@ const I18N = {
     layoutB: "优雅书封风",
     layoutC: "档案索引卡",
     emptyStateIcon: "📂",
-    emptyStateText: "还没有导入{0}数据。\n点击上方按钮导入 JSON 文件开始探索！"
+    emptyStateText: "还没有导入{0}数据。\n点击上方按钮导入 JSON 文件开始探索！",
+    importHelpTitle: "数据格式与导入教程",
+    importHelpIntro: "支持导入 JSON 数组文件。建议使用开发者推荐的 <a href='https://github.com/holynova/scrape-to-markdown' target='_blank'>scrape-to-markdown</a> 浏览器插件来一键抓取并导出您的豆瓣数据。"
   },
   en: {
     appTitle: "Bookmark Miner",
@@ -213,7 +215,9 @@ const I18N = {
     layoutB: "Editorial Cover",
     layoutC: "Data Index",
     emptyStateIcon: "📂",
-    emptyStateText: "No {0} data imported yet.\nClick the import button above to get started!"
+    emptyStateText: "No {0} data imported yet.\nClick the import button above to get started!",
+    importHelpTitle: "Data Format & Import Tutorial",
+    importHelpIntro: "Supports importing JSON array files. We recommend using the developer's <a href='https://github.com/holynova/scrape-to-markdown' target='_blank'>scrape-to-markdown</a> browser extension to scrape and export your Douban data easily."
   }
 };
 
@@ -231,7 +235,11 @@ function updateUILang() {
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const k = el.getAttribute("data-i18n");
     if (I18N[currentLang][k]) {
-      el.textContent = I18N[currentLang][k];
+      if (k === "importHelpIntro") {
+        el.innerHTML = I18N[currentLang][k];
+      } else {
+        el.textContent = I18N[currentLang][k];
+      }
     }
   });
   const switchBtn = document.getElementById("lang-switch");
@@ -768,6 +776,7 @@ function buildMediaCards(items, containerId, footerId, label, totalCount = 0) {
     const clone = template.content.cloneNode(true);
     const card = clone.querySelector(".card");
     const titleEl = clone.querySelector(".title");
+    const subtitleEl = clone.querySelector(".subtitle");
     const urlEl = clone.querySelector(".url");
     const pathEl = clone.querySelector(".path");
     const dateEl = clone.querySelector(".meta-date");
@@ -782,7 +791,24 @@ function buildMediaCards(items, containerId, footerId, label, totalCount = 0) {
     }
 
     const readMs = item.readDate ? Date.parse(item.readDate) : null;
-    titleEl.textContent = item.title || "";
+    
+    const isMovie = label === "tabMovieSeen" || label === "tabMovieWish";
+    let mainTitle = item.title || "";
+    let subTitle = "";
+    if (isMovie && mainTitle.includes("/")) {
+      const parts = mainTitle.split("/");
+      mainTitle = parts[0].trim();
+      subTitle = parts.slice(1).map(p => p.trim()).join(" / ");
+    }
+
+    titleEl.textContent = mainTitle;
+    if (subTitle) {
+      subtitleEl.textContent = subTitle;
+      subtitleEl.style.display = "block";
+    } else {
+      subtitleEl.style.display = "none";
+    }
+    
     urlEl.textContent = item.comment || "";
     pathEl.textContent = item.rating || "";
     if (!item.rating) {
