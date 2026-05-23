@@ -1,3 +1,124 @@
+// Polyfill/Mock for non-extension environments (like file:// during development)
+if (typeof chrome === "undefined" || !chrome.storage || !chrome.storage.local) {
+  console.log("Running in non-extension context. Initializing mock chrome APIs.");
+  
+  const mockStorage = {
+    get: function(keys, callback) {
+      return new Promise((resolve) => {
+        const result = {};
+        const getSingle = (key) => {
+          try {
+            const val = localStorage.getItem(key);
+            return val ? JSON.parse(val) : null;
+          } catch(e) {
+            return null;
+          }
+        };
+        if (typeof keys === "string") {
+          result[keys] = getSingle(keys);
+        } else if (Array.isArray(keys)) {
+          keys.forEach(k => {
+            result[k] = getSingle(k);
+          });
+        } else if (typeof keys === "object" && keys !== null) {
+          Object.keys(keys).forEach(k => {
+            const val = getSingle(k);
+            result[k] = val !== null ? val : keys[k];
+          });
+        }
+        if (callback) callback(result);
+        resolve(result);
+      });
+    },
+    set: function(items, callback) {
+      return new Promise((resolve) => {
+        Object.keys(items).forEach(k => {
+          localStorage.setItem(k, JSON.stringify(items[k]));
+        });
+        if (callback) callback();
+        resolve();
+      });
+    },
+    clear: function(callback) {
+      return new Promise((resolve) => {
+        localStorage.clear();
+        if (callback) callback();
+        resolve();
+      });
+    }
+  };
+
+  const MOCK_BOOKMARKS = [
+    { id: "mock-1", title: "Google Search", url: "https://www.google.com", dateAdded: Date.now() - 5 * 24 * 3600 * 1000, parentId: "1" },
+    { id: "mock-2", title: "GitHub Repository", url: "https://github.com/holynova/collection_miner", dateAdded: Date.now() - 400 * 24 * 3600 * 1000, parentId: "1" },
+    { id: "mock-3", title: "Douban Movie", url: "https://movie.douban.com", dateAdded: Date.now() - 800 * 24 * 3600 * 1000, parentId: "2" },
+    { id: "mock-4", title: "V2EX Community", url: "https://www.v2ex.com", dateAdded: Date.now() - 1200 * 24 * 3600 * 1000, parentId: "2" },
+    { id: "mock-5", title: "Hacker News", url: "https://news.ycombinator.com", dateAdded: Date.now() - 2000 * 24 * 3600 * 1000, parentId: "3" },
+    { id: "mock-6", title: "Bilibili Video", url: "https://www.bilibili.com", dateAdded: Date.now() - 100 * 24 * 3600 * 1000, parentId: "3" }
+  ];
+
+  const MOCK_INDEX = {
+    "1": { id: "1", title: "Favorites", parentId: "0" },
+    "2": { id: "2", title: "Tech & Dev", parentId: "0" },
+    "3": { id: "3", title: "Read Later", parentId: "0" },
+    "mock-1": { id: "mock-1", title: "Google Search", url: "https://www.google.com", dateAdded: Date.now() - 5 * 24 * 3600 * 1000, parentId: "1" },
+    "mock-2": { id: "mock-2", title: "GitHub Repository", url: "https://github.com/holynova/collection_miner", dateAdded: Date.now() - 400 * 24 * 3600 * 1000, parentId: "1" },
+    "mock-3": { id: "mock-3", title: "Douban Movie", url: "https://movie.douban.com", dateAdded: Date.now() - 800 * 24 * 3600 * 1000, parentId: "2" },
+    "mock-4": { id: "mock-4", title: "V2EX Community", url: "https://www.v2ex.com", dateAdded: Date.now() - 1200 * 24 * 3600 * 1000, parentId: "2" },
+    "mock-5": { id: "mock-5", title: "Hacker News", url: "https://news.ycombinator.com", dateAdded: Date.now() - 2000 * 24 * 3600 * 1000, parentId: "3" },
+    "mock-6": { id: "mock-6", title: "Bilibili Video", url: "https://www.bilibili.com", dateAdded: Date.now() - 100 * 24 * 3600 * 1000, parentId: "3" }
+  };
+
+  const mockBookmarks = {
+    getTree: function() {
+      return Promise.resolve([
+        {
+          id: "0",
+          title: "Root",
+          children: [
+            { id: "1", title: "Favorites", children: MOCK_BOOKMARKS.filter(b => b.parentId === "1") },
+            { id: "2", title: "Tech & Dev", children: MOCK_BOOKMARKS.filter(b => b.parentId === "2") },
+            { id: "3", title: "Read Later", children: MOCK_BOOKMARKS.filter(b => b.parentId === "3") }
+          ]
+        }
+      ]);
+    },
+    get: function(id) {
+      const item = MOCK_INDEX[id];
+      return Promise.resolve(item ? [item] : []);
+    },
+    remove: function(id) {
+      console.log(`Mock bookmarks.remove called for id: ${id}`);
+      return Promise.resolve();
+    },
+    create: function(bookmark) {
+      console.log("Mock bookmarks.create called with:", bookmark);
+      return Promise.resolve({ id: "mock-new", ...bookmark });
+    }
+  };
+
+  const mockTabs = {
+    query: function() { return Promise.resolve([]); },
+    getCurrent: function() { return Promise.resolve(null); },
+    remove: function() { return Promise.resolve(); },
+    onCreated: { addListener: () => {} },
+    onRemoved: { addListener: () => {} },
+    onUpdated: { addListener: () => {} }
+  };
+
+  const mockRuntime = {
+    getURL: function(path) { return path; }
+  };
+
+  if (!window.chrome) {
+    window.chrome = {};
+  }
+  window.chrome.storage = { local: mockStorage };
+  window.chrome.bookmarks = mockBookmarks;
+  window.chrome.tabs = mockTabs;
+  window.chrome.runtime = mockRuntime;
+}
+
 const STORAGE_KEYS = {
   BOOKMARKS: "bookmarks_flat",
   INDEX: "bookmarks_index",
@@ -411,6 +532,10 @@ function attachTilt(card) {
       card.style.setProperty("--tilt-x", `${tiltX}deg`);
       card.style.setProperty("--tilt-y", `${tiltY}deg`);
       card.style.setProperty("--float-y", `${floatY}px`);
+      card.style.setProperty("--mx", x.toFixed(3));
+      card.style.setProperty("--my", y.toFixed(3));
+      card.style.setProperty("--mx-pct", `${(x * 100).toFixed(1)}%`);
+      card.style.setProperty("--my-pct", `${(y * 100).toFixed(1)}%`);
     });
   }
 
@@ -419,6 +544,10 @@ function attachTilt(card) {
     card.style.setProperty("--tilt-x", "0deg");
     card.style.setProperty("--tilt-y", "0deg");
     card.style.setProperty("--float-y", "0px");
+    card.style.setProperty("--mx", "0.5");
+    card.style.setProperty("--my", "0.5");
+    card.style.setProperty("--mx-pct", "50%");
+    card.style.setProperty("--my-pct", "50%");
   }
 
   card.addEventListener("mousemove", onMove);

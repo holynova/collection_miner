@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.3.1 - 2026-05-23
+
+### Features
+- **Dynamic 3D Card Reflections**: Added interactive cursor-following glare, sheen, and parallax lighting effects.
+- **3-Layer Edge Highlights**: Added a multi-layered border clipping system to display clear level colors (white, green, blue, purple, gold) with interactive cursor-tracking highlights.
+- **Mock Fallback Environment**: Added mock Chrome storage and bookmarks APIs to support full interactive layout testing in local `file://` development environments.
+
+---
+
 ## 0.3.0 - 2026-05-21
 
 ### Features
