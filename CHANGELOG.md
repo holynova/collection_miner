@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.3.2 - 2026-05-23
+
+### Features
+- **Typography Migration**: Transitioned the layout typography completely to modern, high-quality sans-serif families (Inter and Outfit) for a cleaner, unified UI.
+
+---
+
 ## 0.3.1 - 2026-05-23
 
 ### Features
