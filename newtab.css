@@ -49,28 +49,67 @@ body::before {
 .page {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 48px 32px 36px;
+  padding: 24px 32px 36px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 20px;
   position: relative;
   z-index: 1;
+  min-height: 100vh;
 }
 
-/* ===== Header ===== */
+/* ===== Unified Toolbar ===== */
 
-.header {
+.toolbar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 24px;
+  justify-content: space-between;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
-.header-actions {
+.toolbar-left {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 6px;
+}
+
+.tab-specific-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar-action-btn {
+  font-size: 12px;
+  padding: 6px 14px;
+}
+
+.close-others-btn {
+  font-size: 11px;
+  padding: 5px 12px;
+  border-color: rgba(212, 80, 65, 0.4);
+  color: #e88;
+}
+
+.close-others-btn:hover {
+  border-color: rgba(212, 80, 65, 0.7);
+  background: rgba(212, 80, 65, 0.1);
+  color: #f99;
 }
 
 h1 {
@@ -192,27 +231,13 @@ h1 {
   background: none;
 }
 
-/* ===== Tabs ===== */
-
-.tabs {
-  display: flex;
-  gap: 6px;
-  position: relative;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 3px;
-}
-
-.tabs::-webkit-scrollbar {
-  display: none;
-}
+/* ===== Tab Buttons ===== */
 
 .tab-btn {
   border: 1px solid transparent;
   background: transparent;
   color: var(--text-dim);
-  padding: 8px 18px;
+  padding: 6px 14px;
   border-radius: 999px;
   font-size: 13px;
   font-family: inherit;
@@ -247,6 +272,8 @@ h1 {
 
 .tab-panel.active {
   display: flex;
+  margin-top: auto;
+  margin-bottom: auto;
   animation: panelFadeIn 0.2s ease-out;
 }
 
@@ -1067,19 +1094,33 @@ body.layout-c .card-footer {
   overflow-wrap: anywhere;
 }
 
-/* Fix 2: De-emphasize title */
-.app-title-wrapper {
-  display: flex;
+/* Fix 2: Tips hint ? icon */
+.tips-hint {
+  display: inline-flex;
   align-items: center;
-}
-.app-logo {
-  font-size: 14px;
-  font-weight: 400;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
   color: var(--text-dim);
-  opacity: 0.35;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  user-select: none;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-left: -4px;
+}
+
+.tips-hint:hover {
+  opacity: 1;
+  border-color: var(--gold);
+  color: var(--gold-bright);
+  background: rgba(214, 162, 74, 0.1);
 }
 
 /* Fix 3: Douban Icon */
@@ -1098,73 +1139,18 @@ body.layout-c .card-footer {
   line-height: 1;
 }
 
-/* ===== Import Help & Tutorial ===== */
-.import-help {
-  width: 100%;
-  margin-top: 10px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 12px 16px;
+/* ===== Version Badge ===== */
+.version-badge {
+  position: fixed;
+  bottom: 12px;
+  right: 16px;
+  font-size: 11px;
+  font-family: "Inter", sans-serif;
   color: var(--text-dim);
-  font-size: 13px;
-  transition: all 0.3s ease;
-}
-
-.import-help[open] {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(214, 162, 74, 0.15);
-}
-
-.import-help summary {
-  font-weight: 500;
-  cursor: pointer;
+  opacity: 0.35;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  z-index: 100;
   user-select: none;
-  outline: none;
-  color: var(--gold-bright);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.import-help summary::-webkit-details-marker {
-  color: var(--gold);
-}
-
-.import-help-content {
-  margin-top: 12px;
-  line-height: 1.6;
-  border-top: 1px dashed rgba(255, 255, 255, 0.08);
-  padding-top: 12px;
-}
-
-.import-help-content p {
-  margin: 0 0 10px 0;
-}
-
-.import-help-content a {
-  color: var(--gold-bright);
-  text-decoration: underline;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.import-help-content a:hover {
-  color: var(--text-main);
-}
-
-.import-help pre {
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: 12px;
-  overflow-x: auto;
-  margin: 8px 0 0 0;
-}
-
-.import-help code {
-  font-family: monospace;
-  font-size: 12px;
-  color: var(--text-main);
 }
 

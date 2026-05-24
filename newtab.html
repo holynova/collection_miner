@@ -11,16 +11,61 @@
   </head>
   <body class="layout-a">
     <main class="page">
-      <header class="header">
-        <div class="app-title-wrapper">
-          <span class="app-logo" data-i18n="appTitle">收藏夹淘金</span>
+      <nav class="toolbar">
+        <div class="toolbar-left">
+          <button class="tab-btn active" data-tab="bookmarks" type="button" data-i18n="tabBookmarks">收藏夹</button>
+          <button class="tab-btn" data-tab="douban-read" type="button"><span class="douban-icon">豆</span><span data-i18n="tabDoubanRead">已读</span></button>
+          <button class="tab-btn" data-tab="douban-wish" type="button"><span class="douban-icon">豆</span><span data-i18n="tabDoubanWish">想读</span></button>
+          <button class="tab-btn" data-tab="movie-seen" type="button"><span class="douban-icon">豆</span><span data-i18n="tabMovieSeen">看过</span></button>
+          <button class="tab-btn" data-tab="movie-wish" type="button"><span class="douban-icon">豆</span><span data-i18n="tabMovieWish">想看</span></button>
+          <span class="toolbar-divider"></span>
+          
+          <div class="tab-specific-actions" data-for="bookmarks">
+            <button id="refresh-bookmarks" class="btn toolbar-action-btn" type="button" data-i18n="refreshBtn">再翻三张 ⏎</button>
+          </div>
+          
+          <div class="tab-specific-actions" data-for="douban-read" style="display: none;">
+            <label class="btn file-btn">
+              <span data-i18n="importDoubanRead">导入已读</span>
+              <input id="douban-read-file" type="file" accept="application/json" />
+            </label>
+            <a href="tips.html" target="_blank" class="tips-hint" title="导入教程">?</a>
+            <button id="refresh-douban-read" class="btn toolbar-action-btn" type="button" data-i18n="refreshBtn">再翻三张 ⏎</button>
+          </div>
+
+          <div class="tab-specific-actions" data-for="douban-wish" style="display: none;">
+            <label class="btn file-btn">
+              <span data-i18n="importDoubanWish">导入想读</span>
+              <input id="douban-wish-file" type="file" accept="application/json" />
+            </label>
+            <a href="tips.html" target="_blank" class="tips-hint" title="导入教程">?</a>
+            <button id="refresh-douban-wish" class="btn toolbar-action-btn" type="button" data-i18n="refreshBtn">再翻三张 ⏎</button>
+          </div>
+
+          <div class="tab-specific-actions" data-for="movie-seen" style="display: none;">
+            <label class="btn file-btn">
+              <span data-i18n="importMovieSeen">导入看过</span>
+              <input id="movie-seen-file" type="file" accept="application/json" />
+            </label>
+            <a href="tips.html" target="_blank" class="tips-hint" title="导入教程">?</a>
+            <button id="refresh-movie-seen" class="btn toolbar-action-btn" type="button" data-i18n="refreshBtn">再翻三张 ⏎</button>
+          </div>
+
+          <div class="tab-specific-actions" data-for="movie-wish" style="display: none;">
+            <label class="btn file-btn">
+              <span data-i18n="importMovieWish">导入想看</span>
+              <input id="movie-wish-file" type="file" accept="application/json" />
+            </label>
+            <a href="tips.html" target="_blank" class="tips-hint" title="导入教程">?</a>
+            <button id="refresh-movie-wish" class="btn toolbar-action-btn" type="button" data-i18n="refreshBtn">再翻三张 ⏎</button>
+          </div>
         </div>
-        <div class="header-actions">
-          <a href="https://github.com/holynova/collection_miner" target="_blank" class="btn github-btn" aria-label="GitHub" title="GitHub" style="display: flex; align-items: center; gap: 6px;">
+        <div class="toolbar-right">
+          <button id="close-others" class="btn close-others-btn" type="button" style="display: none;" data-i18n="closeOthers">关闭其他标签页</button>
+          <a href="https://github.com/holynova/collection_miner" target="_blank" class="btn icon-btn github-btn" aria-label="GitHub" title="GitHub">
             <svg height="16" aria-hidden="true" viewBox="0 0 16 16" version="1.1" width="16" style="fill: currentColor;">
               <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
             </svg>
-            GitHub
           </a>
           <div class="more-menu-wrapper">
             <button id="more-menu-btn" class="btn icon-btn" type="button" aria-label="More" title="More">⋯</button>
@@ -30,7 +75,6 @@
                 <span data-i18n="importBackup">导入备份</span>
                 <input id="import-backup-file" type="file" accept="application/json" />
               </label>
-              <button id="close-others" class="more-menu-item" type="button" style="display: none;" data-i18n="closeOthers">关闭其他标签页</button>
               <div class="more-menu-divider"></div>
               <div class="more-menu-item more-menu-select-row">
                 <span data-i18n="layoutLabel">卡面排版</span>
@@ -47,128 +91,29 @@
           </div>
           <button id="lang-switch" class="btn icon-btn lang-switch-btn" type="button" title="Language">EN</button>
         </div>
-      </header>
-
-      <nav class="tabs">
-        <button class="tab-btn active" data-tab="bookmarks" type="button" data-i18n="tabBookmarks">收藏夹</button>
-        <button class="tab-btn" data-tab="douban-read" type="button"><span class="douban-icon">豆</span><span data-i18n="tabDoubanRead">已读</span></button>
-        <button class="tab-btn" data-tab="douban-wish" type="button"><span class="douban-icon">豆</span><span data-i18n="tabDoubanWish">想读</span></button>
-        <button class="tab-btn" data-tab="movie-seen" type="button"><span class="douban-icon">豆</span><span data-i18n="tabMovieSeen">看过</span></button>
-        <button class="tab-btn" data-tab="movie-wish" type="button"><span class="douban-icon">豆</span><span data-i18n="tabMovieWish">想看</span></button>
       </nav>
 
       <section class="tab-panel active" id="tab-bookmarks">
-        <div class="tab-actions">
-          <button id="refresh-bookmarks" class="btn" type="button" data-i18n="refreshBtn">再翻三张</button>
-        </div>
         <section class="cards" id="cards"></section>
         <footer class="footer" id="footer"></footer>
       </section>
 
       <section class="tab-panel" id="tab-douban-read">
-        <div class="tab-actions">
-          <label class="btn file-btn">
-            <span data-i18n="importDoubanRead">导入已读</span>
-            <input id="douban-read-file" type="file" accept="application/json" />
-          </label>
-          <button id="refresh-douban-read" class="btn" type="button" data-i18n="refreshBtn">再翻三张</button>
-          <details class="import-help">
-            <summary data-i18n="importHelpTitle">数据格式与导入教程</summary>
-            <div class="import-help-content">
-              <p data-i18n="importHelpIntro"></p>
-              <pre><code>[
-  {
-    "title": "书名 / 电影名",
-    "link": "https://movie.douban.com/subject/...",
-    "rating": "★★★★★",
-    "comment": "你的简评",
-    "readDate": "2026-05-23"
-  }
-]</code></pre>
-            </div>
-          </details>
-        </div>
         <section class="cards" id="douban-read-cards"></section>
         <footer class="footer" id="douban-read-footer"></footer>
       </section>
 
       <section class="tab-panel" id="tab-douban-wish">
-        <div class="tab-actions">
-          <label class="btn file-btn">
-            <span data-i18n="importDoubanWish">导入想读</span>
-            <input id="douban-wish-file" type="file" accept="application/json" />
-          </label>
-          <button id="refresh-douban-wish" class="btn" type="button" data-i18n="refreshBtn">再翻三张</button>
-          <details class="import-help">
-            <summary data-i18n="importHelpTitle">数据格式与导入教程</summary>
-            <div class="import-help-content">
-              <p data-i18n="importHelpIntro"></p>
-              <pre><code>[
-  {
-    "title": "书名 / 电影名",
-    "link": "https://movie.douban.com/subject/...",
-    "rating": "★★★★★",
-    "comment": "你的简评",
-    "readDate": "2026-05-23"
-  }
-]</code></pre>
-            </div>
-          </details>
-        </div>
         <section class="cards" id="douban-wish-cards"></section>
         <footer class="footer" id="douban-wish-footer"></footer>
       </section>
 
       <section class="tab-panel" id="tab-movie-seen">
-        <div class="tab-actions">
-          <label class="btn file-btn">
-            <span data-i18n="importMovieSeen">导入看过</span>
-            <input id="movie-seen-file" type="file" accept="application/json" />
-          </label>
-          <button id="refresh-movie-seen" class="btn" type="button" data-i18n="refreshBtn">再翻三张</button>
-          <details class="import-help">
-            <summary data-i18n="importHelpTitle">数据格式与导入教程</summary>
-            <div class="import-help-content">
-              <p data-i18n="importHelpIntro"></p>
-              <pre><code>[
-  {
-    "title": "书名 / 电影名",
-    "link": "https://movie.douban.com/subject/...",
-    "rating": "★★★★★",
-    "comment": "你的简评",
-    "readDate": "2026-05-23"
-  }
-]</code></pre>
-            </div>
-          </details>
-        </div>
         <section class="cards" id="movie-seen-cards"></section>
         <footer class="footer" id="movie-seen-footer"></footer>
       </section>
 
       <section class="tab-panel" id="tab-movie-wish">
-        <div class="tab-actions">
-          <label class="btn file-btn">
-            <span data-i18n="importMovieWish">导入想看</span>
-            <input id="movie-wish-file" type="file" accept="application/json" />
-          </label>
-          <button id="refresh-movie-wish" class="btn" type="button" data-i18n="refreshBtn">再翻三张</button>
-          <details class="import-help">
-            <summary data-i18n="importHelpTitle">数据格式与导入教程</summary>
-            <div class="import-help-content">
-              <p data-i18n="importHelpIntro"></p>
-              <pre><code>[
-  {
-    "title": "书名 / 电影名",
-    "link": "https://movie.douban.com/subject/...",
-    "rating": "★★★★★",
-    "comment": "你的简评",
-    "readDate": "2026-05-23"
-  }
-]</code></pre>
-            </div>
-          </details>
-        </div>
         <section class="cards" id="movie-wish-cards"></section>
         <footer class="footer" id="movie-wish-footer"></footer>
       </section>
@@ -225,6 +170,8 @@
       <span class="toast-message"></span>
       <button class="toast-action" type="button">撤销</button>
     </div>
+
+    <div class="version-badge" id="version-badge"></div>
 
     <script src="newtab.js"></script>
   </body>

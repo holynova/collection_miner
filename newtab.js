@@ -107,7 +107,12 @@ if (typeof chrome === "undefined" || !chrome.storage || !chrome.storage.local) {
   };
 
   const mockRuntime = {
-    getURL: function(path) { return path; }
+    getURL: function(path) { return path; },
+    getManifest: function() {
+      return {
+        version: "0.3.6"
+      };
+    }
   };
 
   if (!window.chrome) {
@@ -173,8 +178,7 @@ const I18N = {
     layoutC: "档案索引卡",
     emptyStateIcon: "📂",
     emptyStateText: "还没有导入{0}数据。\n点击上方按钮导入 JSON 文件开始探索！",
-    importHelpTitle: "数据格式与导入教程",
-    importHelpIntro: "支持导入 JSON 数组文件。建议使用开发者推荐的 <a href='https://github.com/holynova/scrape-to-markdown.chrome' target='_blank'>scrape-to-markdown</a> 浏览器插件来一键抓取并导出您的豆瓣数据。"
+    tipsBtn: "导入教程"
   },
   en: {
     appTitle: "Bookmark Miner",
@@ -216,8 +220,7 @@ const I18N = {
     layoutC: "Data Index",
     emptyStateIcon: "📂",
     emptyStateText: "No {0} data imported yet.\nClick the import button above to get started!",
-    importHelpTitle: "Data Format & Import Tutorial",
-    importHelpIntro: "Supports importing JSON array files. We recommend using the developer's <a href='https://github.com/holynova/scrape-to-markdown.chrome' target='_blank'>scrape-to-markdown</a> browser extension to scrape and export your Douban data easily."
+    tipsBtn: "Import Guide"
   }
 };
 
@@ -235,11 +238,7 @@ function updateUILang() {
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const k = el.getAttribute("data-i18n");
     if (I18N[currentLang][k]) {
-      if (k === "importHelpIntro") {
-        el.innerHTML = I18N[currentLang][k];
-      } else {
-        el.textContent = I18N[currentLang][k];
-      }
+      el.textContent = I18N[currentLang][k];
     }
   });
   const switchBtn = document.getElementById("lang-switch");
@@ -261,6 +260,7 @@ async function initLang() {
       currentLang = currentLang === "zh" ? "en" : "zh";
       await chrome.storage.local.set({ [STORAGE_KEYS.LANG]: currentLang });
       updateUILang();
+      setBuildBadge();
       showRandomBookmarks().catch(() => {});
       loadSeries().catch(() => {});
     });
@@ -573,33 +573,74 @@ function ageTier(ms) {
   return "age-gold";
 }
 
-function ratingValue(rating) {
+function detectRatingScale(items) {
+  if (!items || !items.length) return 5;
+  for (const item of items) {
+    if (!item.rating) continue;
+    const ratingStr = String(item.rating).trim();
+    if (ratingStr.includes("allstar")) continue;
+    if (ratingStr.includes("星")) continue;
+    const numMatch = ratingStr.match(/^(\d+)$/);
+    if (numMatch) {
+      const val = Number(numMatch[1]);
+      if (val === 6 || val === 8 || val === 10) {
+        return 10;
+      }
+    }
+  }
+  return 5;
+}
+
+function ratingValue(rating, scale = 5) {
   if (!rating) return 0;
   const ratingStr = String(rating).trim();
   
-  const digitMatch = ratingStr.match(/(\d)/);
-  if (digitMatch) {
-    const val = Number(digitMatch[1]);
-    return Math.max(0, Math.min(5, val));
-  }
-  
-  if (ratingStr.includes("力荐")) return 5;
-  if (ratingStr.includes("推荐")) return 4;
-  if (ratingStr.includes("还行")) return 3;
-  if (ratingStr.includes("较差")) return 2;
-  if (ratingStr.includes("很差")) return 1;
-  
+  // 1. Star characters (e.g. "★★★★★")
   const starCount = (ratingStr.match(/★/g) || []).length;
   if (starCount > 0) {
     return Math.min(5, starCount);
   }
   
+  // 2. Chinese recommendation keywords
+  if (ratingStr.includes("力荐")) return 5;
+  if (ratingStr.includes("推荐")) return 4;
+  if (ratingStr.includes("还行")) return 3;
+  if (ratingStr.includes("较差")) return 2;
+  if (ratingStr.includes("很差")) return 1;
+
+  // 3. "allstar" CSS class format (e.g. "allstar40", "allstar50", etc.)
+  const allstarMatch = ratingStr.match(/allstar(\d+)/i);
+  if (allstarMatch) {
+    const val = Number(allstarMatch[1]);
+    if (val >= 10) {
+      return Math.max(0, Math.min(5, Math.round(val / 10)));
+    }
+    return Math.max(0, Math.min(5, val));
+  }
+
+  // 4. Star text like "4星", "5星", etc.
+  const starTextMatch = ratingStr.match(/(\d)\s*星/);
+  if (starTextMatch) {
+    return Math.max(0, Math.min(5, Number(starTextMatch[1])));
+  }
+  
+  // 5. Any raw numbers (e.g. "10", "8", "6", "5", "4", "3", "2", "1")
+  const numMatch = ratingStr.match(/(\d+(?:\.\d+)?)/);
+  if (numMatch) {
+    const val = Number(numMatch[1]);
+    if (scale === 10 || val > 5) {
+      return Math.max(0, Math.min(5, Math.round(val / 2)));
+    }
+    return Math.max(0, Math.min(5, Math.round(val)));
+  }
+  
   return 0;
 }
 
-function ratingTier(rating) {
-  const value = ratingValue(rating);
-  if (value <= 1) return "rating-1";
+function ratingTier(rating, scale = 5) {
+  const value = ratingValue(rating, scale);
+  if (value === 0) return "";
+  if (value === 1) return "rating-1";
   if (value === 2) return "rating-2";
   if (value === 3) return "rating-3";
   if (value === 4) return "rating-4";
@@ -774,7 +815,7 @@ function buildCards(bookmarks, nodeIndex, stats) {
   });
 }
 
-function buildMediaCards(items, containerId, footerId, label, totalCount = 0) {
+function buildMediaCards(items, containerId, footerId, label, totalCount = 0, scale = 5) {
   const container = document.getElementById(containerId);
   const isRefresh = container.childElementCount > 0 && !container.querySelector(".empty-state");
   const template = document.getElementById("card-template");
@@ -800,7 +841,13 @@ function buildMediaCards(items, containerId, footerId, label, totalCount = 0) {
     const ratingEl = clone.querySelector(".rating-stars");
     const toolbarEl = clone.querySelector(".card-toolbar");
 
-    card.classList.add(ratingTier(item.rating));
+    const isWish = label === "tabDoubanWish" || label === "tabMovieWish";
+    if (!isWish) {
+      const tier = ratingTier(item.rating, scale);
+      if (tier) {
+        card.classList.add(tier);
+      }
+    }
     if (isRefresh) {
       card.classList.add("is-refresh-entering");
     }
@@ -825,18 +872,32 @@ function buildMediaCards(items, containerId, footerId, label, totalCount = 0) {
     }
     
     urlEl.textContent = item.comment || "";
-    pathEl.textContent = item.rating || "";
-    if (!item.rating) {
+    if (isWish) {
       pathEl.style.display = "none";
     } else {
-      pathEl.style.display = "inline-flex";
+      pathEl.textContent = item.rating || "";
+      if (!item.rating) {
+        pathEl.style.display = "none";
+      } else {
+        pathEl.style.display = "inline-flex";
+      }
     }
     dateEl.textContent = readMs
       ? t("readOn", formatDate(readMs), formatElapsed(readMs))
       : "";
     favicon.style.backgroundImage = item.link ? `url('${faviconUrl(item.link)}')` : "";
     faviconText.textContent = getInitial(item.title, item.link);
-    renderStars(ratingEl, ratingValue(item.rating));
+
+    if (isWish) {
+      if (ratingEl) ratingEl.remove();
+    } else {
+      const val = ratingValue(item.rating, scale);
+      if (val > 0) {
+        renderStars(ratingEl, val);
+      } else {
+        if (ratingEl) ratingEl.remove();
+      }
+    }
 
     if (toolbarEl) toolbarEl.style.display = "none";
 
@@ -1032,14 +1093,33 @@ async function showRandomSeries(series, containerId, footerId, label) {
     buildMediaCards([], containerId, footerId, label);
     return;
   }
+  const scale = detectRatingScale(series);
   const picked = pickRandomUnique(series, 3);
-  buildMediaCards(picked, containerId, footerId, label, series.length);
+  buildMediaCards(picked, containerId, footerId, label, series.length, scale);
 }
 
 function setBuildBadge() {
+  let version = "0.3.6";
+  if (typeof chrome !== "undefined" && chrome.runtime && typeof chrome.runtime.getManifest === "function") {
+    try {
+      const manifest = chrome.runtime.getManifest();
+      if (manifest && manifest.version) {
+        version = manifest.version;
+      }
+    } catch (e) {
+      // ignore
+    }
+  }
+
   const badge = document.getElementById("corner-badge");
   if (badge) {
-    badge.textContent = `build ${BUILD_ID}`;
+    badge.textContent = `v${version} / build ${BUILD_ID}`;
+  }
+
+  const versionEl = document.getElementById("version-badge");
+  if (versionEl) {
+    const appName = t("appTitle");
+    versionEl.textContent = `${appName} v${version}`;
   }
 }
 
@@ -1057,9 +1137,19 @@ function setupTabs() {
     tab.addEventListener("click", () => {
       tabs.forEach((btn) => btn.classList.remove("active"));
       tab.classList.add("active");
+      
       Object.values(panels).forEach((panel) => panel.classList.remove("active"));
       const target = panels[tab.dataset.tab];
       if (target) target.classList.add("active");
+
+      const activeTabName = tab.dataset.tab;
+      document.querySelectorAll(".tab-specific-actions").forEach((group) => {
+        if (group.dataset.for === activeTabName) {
+          group.style.display = "inline-flex";
+        } else {
+          group.style.display = "none";
+        }
+      });
     });
   });
 }
@@ -1428,12 +1518,10 @@ initLayoutSelect();
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
-    const activePanel = document.querySelector(".tab-panel.active");
-    if (activePanel) {
-      const refreshBtn = activePanel.querySelector("button[id^='refresh-']");
-      if (refreshBtn) {
-        refreshBtn.click();
-      }
+    const visibleRefreshBtn = Array.from(document.querySelectorAll("button[id^='refresh-']"))
+      .find(btn => btn.offsetWidth > 0 || btn.offsetHeight > 0);
+    if (visibleRefreshBtn) {
+      visibleRefreshBtn.click();
     }
   }
 });

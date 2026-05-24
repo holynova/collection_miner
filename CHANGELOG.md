@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.3.6 - 2026-05-23
+
+### Fixes
+- **Movie Rating Stars & Tutorial Schema**: Corrected movie rating star count parsing to support star text formats (e.g. `"4星"`), and implemented automatic dataset-wide 5-point vs 10-point scale detection (e.g., mapping `"10"` to 5 stars, `"8"` to 4 stars). Updated the import guide examples in `tips.html` to align with the realistic exported JSON structure.
+
+---
+
 ## 0.3.5 - 2026-05-23
 
 ### Fixes
