@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.3.7 - 2026-05-25
+
+### Fixes
+- **GitHub Button Layout**: Fixed GitHub button styling by ensuring the SVG child does not shrink to 0 width under flexbox layout in the toolbar.
+- **Empty Rating Display**: Refactored movie/book rating display to hide stars completely and remove rating-based border tier classes for unrated items.
+
+---
+
 ## 0.3.6 - 2026-05-23
 
 ### Fixes

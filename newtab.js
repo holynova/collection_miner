@@ -110,7 +110,7 @@ if (typeof chrome === "undefined" || !chrome.storage || !chrome.storage.local) {
     getURL: function(path) { return path; },
     getManifest: function() {
       return {
-        version: "0.3.6"
+        version: "0.3.7"
       };
     }
   };
@@ -1099,7 +1099,7 @@ async function showRandomSeries(series, containerId, footerId, label) {
 }
 
 function setBuildBadge() {
-  let version = "0.3.6";
+  let version = "0.3.7";
   if (typeof chrome !== "undefined" && chrome.runtime && typeof chrome.runtime.getManifest === "function") {
     try {
       const manifest = chrome.runtime.getManifest();
