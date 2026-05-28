@@ -176,6 +176,10 @@ const I18N = {
     layoutA: "现代杂志风",
     layoutB: "优雅书封风",
     layoutC: "档案索引卡",
+    backStyleLabel: "卡背样式",
+    backClassic: "皇家金雀 (经典金)",
+    backCyber: "赛博霓虹 (科幻蓝)",
+    backCosmic: "星宿物语 (极简蓝)",
     emptyStateIcon: "📂",
     emptyStateText: "还没有导入{0}数据。\n点击上方按钮导入 JSON 文件开始探索！",
     tipsBtn: "导入教程"
@@ -218,6 +222,10 @@ const I18N = {
     layoutA: "Modern Magazine",
     layoutB: "Editorial Cover",
     layoutC: "Data Index",
+    backStyleLabel: "Card Back",
+    backClassic: "Royal Gold (Classic)",
+    backCyber: "Cyber Neon (Sci-Fi)",
+    backCosmic: "Celestial (Minimalist)",
     emptyStateIcon: "📂",
     emptyStateText: "No {0} data imported yet.\nClick the import button above to get started!",
     tipsBtn: "Import Guide"
@@ -1467,6 +1475,25 @@ function initLayoutSelect() {
   });
 }
 
+function initBackStyleSelect() {
+  const selectEl = document.getElementById("back-style-select");
+  if (!selectEl) return;
+
+  chrome.storage.local.get("cardBackStyle", (res) => {
+    const style = res.cardBackStyle || "back-classic";
+    selectEl.value = style;
+    document.body.className = document.body.className.replace(/back-\w+/g, "").trim();
+    document.body.classList.add(style);
+  });
+
+  selectEl.addEventListener("change", (e) => {
+    const style = e.target.value;
+    chrome.storage.local.set({ cardBackStyle: style });
+    document.body.className = document.body.className.replace(/back-\w+/g, "").trim();
+    document.body.classList.add(style);
+  });
+}
+
 bindFileInput(
   "douban-read-file",
   STORAGE_KEYS.DOUBAN_READ,
@@ -1515,6 +1542,7 @@ showRandomBookmarks().catch(() => {});
 loadSeries().catch(() => {});
 initLang().catch(() => {});
 initLayoutSelect();
+initBackStyleSelect();
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {

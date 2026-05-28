@@ -502,7 +502,8 @@ h1 {
   z-index: 5;
 }
 
-.card.is-revealed:hover .card-front::after {
+.card.is-revealed:hover .card-front::after,
+.card.is-refresh-revealed:hover .card-front::after {
   opacity: 1;
 }
 
@@ -1159,4 +1160,248 @@ body.layout-c .card-footer {
   z-index: 100;
   user-select: none;
 }
+
+/* =========================================
+   Card Back Style Themes
+   ========================================= */
+
+/* --- 1. Royal Classic Theme (Imperial Gold & Crimson) --- */
+body.back-classic .card-back {
+  background-image:
+    radial-gradient(circle at center, #351616, #160707),
+    radial-gradient(circle at var(--mx-pct) var(--my-pct), var(--border-color-glow) 0%, transparent 60%),
+    linear-gradient(var(--border-color-base), var(--border-color-base));
+}
+
+body.back-classic .back-frame {
+  border: 2px solid rgba(214, 162, 74, 0.75);
+  background: linear-gradient(135deg, rgba(214, 162, 74, 0.06), rgba(0, 0, 0, 0.5));
+  position: relative;
+  box-shadow: inset 0 0 24px rgba(214, 162, 74, 0.2);
+}
+
+body.back-classic .back-frame::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed rgba(214, 162, 74, 0.35);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+body.back-classic .back-symbol {
+  font-family: "Georgia", serif;
+  color: var(--gold-bright);
+  font-size: 52px;
+  text-shadow: 0 0 24px rgba(242, 200, 107, 0.6);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+body.back-classic .card:hover .back-symbol {
+  transform: scale(1.12) rotate(6deg);
+}
+
+body.back-classic .back-title {
+  font-family: "Outfit", "Inter", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  color: var(--gold-bright);
+}
+
+/* --- 2. Cyber Neon Theme (Holographic Sci-Fi) --- */
+body.back-cyber .card-back {
+  background-image:
+    radial-gradient(circle at center, #0f1620, #04080e),
+    radial-gradient(circle at var(--mx-pct) var(--my-pct), rgba(100, 220, 255, 0.4) 0%, transparent 60%),
+    linear-gradient(rgba(59, 192, 200, 0.5), rgba(170, 120, 255, 0.5));
+}
+
+body.back-cyber .card-back::after {
+  background: 
+    radial-gradient(circle at var(--mx-pct) var(--my-pct), rgba(59, 192, 200, 0.12) 0%, transparent 50%),
+    linear-gradient(135deg, transparent 30%, rgba(59, 192, 200, 0.22) 45%, rgba(170, 120, 255, 0.3) 50%, rgba(59, 192, 200, 0.22) 55%, transparent 70%);
+}
+
+body.back-cyber .back-frame {
+  border: 1.5px solid rgba(59, 192, 200, 0.5);
+  background: 
+    linear-gradient(0deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
+    repeating-linear-gradient(0deg, rgba(59, 192, 200, 0.03), rgba(59, 192, 200, 0.03) 2px, transparent 2px, transparent 4px),
+    repeating-linear-gradient(90deg, rgba(59, 192, 200, 0.03), rgba(59, 192, 200, 0.03) 2px, transparent 2px, transparent 4px);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(59, 192, 200, 0.15);
+}
+
+/* Sci-fi corner brackets */
+body.back-cyber .back-frame::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: 1.5px solid rgba(170, 120, 255, 0.75);
+  border-radius: 12px;
+  clip-path: polygon(
+    0 0, 16px 0, 16px 3px, 3px 3px, 3px 16px, 0 16px,
+    0 100%, 16px 100%, 16px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 16px), 0 calc(100% - 16px),
+    100% 100%, calc(100% - 16px) 100%, calc(100% - 16px) calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) calc(100% - 16px), 100% calc(100% - 16px),
+    100% 0, calc(100% - 16px) 0, calc(100% - 16px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 16px, 100% 16px
+  );
+  pointer-events: none;
+}
+
+body.back-cyber .back-symbol {
+  font-size: 0 !important; /* Hide "♣" */
+  background: rgba(59, 192, 200, 0.06);
+  border: 1.5px solid rgba(59, 192, 200, 0.45);
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 0 15px rgba(59, 192, 200, 0.2);
+  transition: all 0.4s ease;
+}
+
+body.back-cyber .back-symbol::before {
+  content: "❖";
+  font-size: 28px;
+  color: #3bc0c8;
+  text-shadow: 0 0 10px rgba(59, 192, 200, 0.8);
+  line-height: 1;
+}
+
+body.back-cyber .card:hover .back-symbol {
+  transform: scale(1.1) rotate(90deg);
+  border-color: rgba(170, 120, 255, 0.7);
+  box-shadow: 0 0 20px rgba(170, 120, 255, 0.4);
+}
+
+body.back-cyber .back-symbol:hover::before {
+  color: #c9a7ff;
+}
+
+body.back-cyber .back-title {
+  font-family: monospace;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #aa78ff;
+  font-size: 15px;
+  text-shadow: 0 0 8px rgba(170, 120, 255, 0.4);
+}
+
+body.back-cyber .back-title::before {
+  content: "// ";
+  opacity: 0.6;
+}
+
+body.back-cyber .back-subtitle {
+  font-family: monospace;
+  letter-spacing: 0.08em;
+  color: #3bc0c8;
+  font-size: 10px;
+  opacity: 0.95;
+  text-transform: uppercase;
+}
+
+body.back-cyber .back-subtitle::before {
+  content: "[SYS_";
+}
+
+body.back-cyber .back-subtitle::after {
+  content: "]";
+}
+
+
+/* --- 3. Celestial Constellation Theme (Minimalist Astral) --- */
+body.back-cosmic .card-back {
+  background-image:
+    radial-gradient(circle at center, #161033, #080516),
+    radial-gradient(circle at var(--mx-pct) var(--my-pct), rgba(255, 255, 255, 0.35) 0%, transparent 60%),
+    linear-gradient(rgba(255, 255, 255, 0.25), rgba(170, 120, 255, 0.25));
+}
+
+body.back-cosmic .card-back::after {
+  background: 
+    radial-gradient(circle at var(--mx-pct) var(--my-pct), rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    linear-gradient(120deg, transparent 35%, rgba(255, 255, 255, 0.2) 50%, transparent 65%);
+}
+
+body.back-cosmic .back-frame {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.07));
+  border-radius: 14px;
+  position: relative;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.04);
+}
+
+/* Constellation grid decoration */
+body.back-cosmic .back-frame::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background-image: 
+    radial-gradient(circle at 30% 20%, #fff 1.5px, transparent 1.5px),
+    radial-gradient(circle at 75% 35%, #fff 1px, transparent 1px),
+    radial-gradient(circle at 25% 75%, #fff 1px, transparent 1px),
+    radial-gradient(circle at 70% 80%, #fff 2px, transparent 2px);
+  background-size: 100% 100%;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+body.back-cosmic .back-symbol {
+  font-size: 0 !important; /* Hide "♣" */
+  position: relative;
+  width: 54px;
+  height: 54px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+body.back-cosmic .back-symbol::before {
+  content: "☾";
+  font-size: 40px;
+  color: #f3ead6;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.7), 0 0 30px rgba(170, 120, 255, 0.3);
+  line-height: 1;
+}
+
+body.back-cosmic .card:hover .back-symbol {
+  transform: rotate(360deg) scale(1.15);
+}
+
+body.back-cosmic .back-title {
+  font-family: "Outfit", "Inter", sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.35em;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 15px;
+}
+
+body.back-cosmic .back-title::before {
+  content: "✧ ";
+  color: var(--gold-bright);
+}
+
+body.back-cosmic .back-title::after {
+  content: " ✧";
+  color: var(--gold-bright);
+}
+
+body.back-cosmic .back-subtitle {
+  font-family: "Outfit", "Inter", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
 
