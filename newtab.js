@@ -110,7 +110,7 @@ if (typeof chrome === "undefined" || !chrome.storage || !chrome.storage.local) {
     getURL: function(path) { return path; },
     getManifest: function() {
       return {
-        version: "0.3.7"
+        version: "0.3.8"
       };
     }
   };
@@ -281,7 +281,7 @@ const MIN_BOOKMARKS_FOR_FILTER = 12;
 const UNDO_TIMEOUT = 8000;
 const MAX_TILT = 18;
 const MAX_FLOAT = -16;
-const BUILD_ID = "2026-05-21-ui-overhaul";
+const BUILD_ID = "2026-05-28-card-backs";
 
 let currentSelection = [];
 let doubanRead = [];
@@ -1107,7 +1107,7 @@ async function showRandomSeries(series, containerId, footerId, label) {
 }
 
 function setBuildBadge() {
-  let version = "0.3.7";
+  let version = "0.3.8";
   if (typeof chrome !== "undefined" && chrome.runtime && typeof chrome.runtime.getManifest === "function") {
     try {
       const manifest = chrome.runtime.getManifest();

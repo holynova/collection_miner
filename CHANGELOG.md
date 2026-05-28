@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.3.8 - 2026-05-28
+
+### Features
+- **Card Back Styles**: Implemented 3 premium themes for card backs—Royal Classic (Imperial Gold & Crimson), Cyber Neon (Holographic Tech), and Celestial Constellation (Minimalist Astral)—with a dropdown selector in the More Menu and local storage persistence.
+
+### Fixes
+- **Card Hover Gloss Bug**: Fixed a bug where the interactive cursor-following glare/gloss on card fronts failed to show on cards loaded via refresh ("再翻三张 ⏎").
+
+---
+
 ## 0.3.7 - 2026-05-25
 
 ### Fixes
