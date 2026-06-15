@@ -549,11 +549,11 @@ function attachTilt(card) {
     // 3. Link layer (url, subtitle): 38px translateZ, 7px shift
     // 4. Title layer (title): 60px translateZ, 11px shift
     const titleShiftX = (x - 0.5) * 11;
-    const titleShiftY = (0.5 - y) * 11;
+    const titleShiftY = (y - 0.5) * 11;
     const linkShiftX = (x - 0.5) * 7;
-    const linkShiftY = (0.5 - y) * 7;
+    const linkShiftY = (y - 0.5) * 7;
     const textShiftX = (x - 0.5) * 4;
-    const textShiftY = (0.5 - y) * 4;
+    const textShiftY = (y - 0.5) * 4;
 
     if (rafId) cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(() => {
