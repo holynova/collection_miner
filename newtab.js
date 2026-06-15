@@ -543,6 +543,18 @@ function attachTilt(card) {
     const tiltX = (0.5 - y) * MAX_TILT;
     const floatY = MAX_FLOAT;
 
+    // Parallax shifts for the 4 distinct layers:
+    // 1. Card background: 0px (no translation)
+    // 2. Other layer (header, tags, toolbar): 20px translateZ, 4px shift
+    // 3. Link layer (url, subtitle): 38px translateZ, 7px shift
+    // 4. Title layer (title): 60px translateZ, 11px shift
+    const titleShiftX = (x - 0.5) * 11;
+    const titleShiftY = (0.5 - y) * 11;
+    const linkShiftX = (x - 0.5) * 7;
+    const linkShiftY = (0.5 - y) * 7;
+    const textShiftX = (x - 0.5) * 4;
+    const textShiftY = (0.5 - y) * 4;
+
     if (rafId) cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(() => {
       card.style.setProperty("--tilt-x", `${tiltX}deg`);
@@ -552,6 +564,12 @@ function attachTilt(card) {
       card.style.setProperty("--my", y.toFixed(3));
       card.style.setProperty("--mx-pct", `${(x * 100).toFixed(1)}%`);
       card.style.setProperty("--my-pct", `${(y * 100).toFixed(1)}%`);
+      card.style.setProperty("--parallax-title-x", `${titleShiftX.toFixed(1)}px`);
+      card.style.setProperty("--parallax-title-y", `${titleShiftY.toFixed(1)}px`);
+      card.style.setProperty("--parallax-link-x", `${linkShiftX.toFixed(1)}px`);
+      card.style.setProperty("--parallax-link-y", `${linkShiftY.toFixed(1)}px`);
+      card.style.setProperty("--parallax-text-x", `${textShiftX.toFixed(1)}px`);
+      card.style.setProperty("--parallax-text-y", `${textShiftY.toFixed(1)}px`);
     });
   }
 
@@ -564,6 +582,12 @@ function attachTilt(card) {
     card.style.setProperty("--my", "0.5");
     card.style.setProperty("--mx-pct", "50%");
     card.style.setProperty("--my-pct", "50%");
+    card.style.setProperty("--parallax-title-x", "0px");
+    card.style.setProperty("--parallax-title-y", "0px");
+    card.style.setProperty("--parallax-link-x", "0px");
+    card.style.setProperty("--parallax-link-y", "0px");
+    card.style.setProperty("--parallax-text-x", "0px");
+    card.style.setProperty("--parallax-text-y", "0px");
   }
 
   card.addEventListener("mousemove", onMove);

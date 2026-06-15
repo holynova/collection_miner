@@ -374,6 +374,7 @@ h1 {
   --my-pct: 50%;
   --border-color-base: rgba(214, 162, 74, 0.4);
   --border-color-glow: rgba(255, 255, 255, 0.55);
+  --glow-color: rgba(255, 255, 255, 0.15);
   --shadow-color: var(--shadow);
   --glow-shadow: calc((var(--mx, 0.5) - 0.5) * -20px) calc(16px + (0.5 - var(--my, 0.5)) * 20px) 32px var(--shadow-color);
 }
@@ -405,6 +406,7 @@ h1 {
   background-clip: padding-box, border-box, border-box;
   background-origin: border-box;
   transition: box-shadow 0.3s ease;
+  transform-style: preserve-3d;
 }
 
 .card-back {
@@ -423,12 +425,13 @@ h1 {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: 
-    radial-gradient(circle at var(--mx-pct) var(--my-pct), rgba(255, 255, 255, 0.05) 0%, transparent 50%),
-    linear-gradient(105deg, transparent 35%, rgba(214, 162, 74, 0.1) 45%, rgba(255, 255, 255, 0.18) 50%, rgba(214, 162, 74, 0.1) 55%, transparent 65%);
-  background-size: 100% 100%, 250% 250%;
-  background-position: 0 0, calc((var(--mx) - 0.5) * -150% + 50%) calc((var(--my) - 0.5) * -150% + 50%);
-  mix-blend-mode: overlay;
+  background: radial-gradient(
+    circle 160px at var(--mx-pct) var(--my-pct),
+    var(--glow-color, rgba(255, 255, 255, 0.22)) 0%,
+    rgba(255, 255, 255, 0.03) 45%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
@@ -480,9 +483,10 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  overflow: hidden;
+  overflow: visible;
   min-height: 280px;
   position: relative;
+  transform-style: preserve-3d;
 }
 
 .card-front::after {
@@ -490,16 +494,18 @@ h1 {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: 
-    radial-gradient(circle at var(--mx-pct) var(--my-pct), rgba(255, 255, 255, 0.08) 0%, transparent 50%),
-    linear-gradient(105deg, transparent 35%, rgba(214, 162, 74, 0.15) 45%, rgba(255, 255, 255, 0.25) 50%, rgba(214, 162, 74, 0.15) 55%, transparent 65%);
-  background-size: 100% 100%, 250% 250%;
-  background-position: 0 0, calc((var(--mx) - 0.5) * -150% + 50%) calc((var(--my) - 0.5) * -150% + 50%);
-  mix-blend-mode: overlay;
+  background: radial-gradient(
+    circle 160px at var(--mx-pct) var(--my-pct),
+    var(--glow-color, rgba(255, 255, 255, 0.22)) 0%,
+    rgba(255, 255, 255, 0.03) 45%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
   z-index: 5;
+  transform: translateZ(1px);
 }
 
 .card.is-revealed:hover .card-front::after,
@@ -514,6 +520,9 @@ h1 {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  transform: translateZ(20px) translate(var(--parallax-text-x, 0px), var(--parallax-text-y, 0px));
+  transition: transform 0.15s ease-out;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
 .brand {
@@ -564,6 +573,9 @@ h1 {
   overflow: hidden;
   margin: 0;
   flex-shrink: 0;
+  transform: translateZ(60px) translate(var(--parallax-title-x, 0px), var(--parallax-title-y, 0px));
+  transition: transform 0.15s ease-out;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.45));
 }
 
 .subtitle {
@@ -579,6 +591,9 @@ h1 {
   -webkit-box-orient: vertical;
   overflow: hidden;
   flex-shrink: 0;
+  transform: translateZ(38px) translate(var(--parallax-link-x, 0px), var(--parallax-link-y, 0px));
+  transition: transform 0.15s ease-out;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
 }
 
 .url {
@@ -593,6 +608,9 @@ h1 {
   -webkit-box-orient: vertical;
   overflow: hidden;
   flex-grow: 1;
+  transform: translateZ(38px) translate(var(--parallax-link-x, 0px), var(--parallax-link-y, 0px));
+  transition: transform 0.15s ease-out;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
 }
 
 .meta-date {
@@ -606,6 +624,9 @@ h1 {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  transform: translateZ(20px) translate(var(--parallax-text-x, 0px), var(--parallax-text-y, 0px));
+  transition: transform 0.15s ease-out;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.25));
 }
 
 .tag {
@@ -628,6 +649,9 @@ h1 {
   align-items: center;
   font-size: 13px;
   color: var(--gold-bright);
+  transform: translateZ(20px) translate(var(--parallax-text-x, 0px), var(--parallax-text-y, 0px));
+  transition: transform 0.15s ease-out;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.25));
 }
 
 .rating-stars .star {
@@ -648,6 +672,9 @@ h1 {
   margin-top: auto;
   padding-top: 8px;
   border-top: 1px solid rgba(214, 162, 74, 0.15);
+  transform: translateZ(20px) translate(var(--parallax-text-x, 0px), var(--parallax-text-y, 0px));
+  transition: transform 0.15s ease-out;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.25));
 }
 
 .toolbar-btn {
@@ -787,23 +814,27 @@ h1 {
 .rarity-common {
   --border-color-base: rgba(214, 162, 74, 0.55);
   --border-color-glow: rgba(255, 255, 255, 0.55);
+  --glow-color: rgba(214, 162, 74, 0.22);
 }
 
 .rarity-rare {
   --border-color-base: rgba(42, 162, 213, 0.75);
   --border-color-glow: rgba(100, 220, 255, 0.95);
+  --glow-color: rgba(100, 220, 255, 0.28);
   --glow-shadow: calc((var(--mx, 0.5) - 0.5) * -20px) calc(16px + (0.5 - var(--my, 0.5)) * 20px) 36px rgba(42, 162, 213, 0.35);
 }
 
 .rarity-legendary {
   --border-color-base: rgba(242, 200, 107, 0.85);
   --border-color-glow: rgba(255, 235, 170, 1);
+  --glow-color: rgba(255, 220, 120, 0.32);
   --glow-shadow: calc((var(--mx, 0.5) - 0.5) * -20px) calc(16px + (0.5 - var(--my, 0.5)) * 20px) 36px rgba(242, 200, 107, 0.4);
 }
 
 .rarity-cursed {
   --border-color-base: rgba(213, 81, 65, 0.8);
   --border-color-glow: rgba(255, 120, 100, 0.95);
+  --glow-color: rgba(255, 120, 100, 0.28);
   --glow-shadow: calc((var(--mx, 0.5) - 0.5) * -20px) calc(16px + (0.5 - var(--my, 0.5)) * 20px) 36px rgba(213, 81, 65, 0.35);
 }
 
@@ -1217,9 +1248,13 @@ body.back-cyber .card-back {
 }
 
 body.back-cyber .card-back::after {
-  background: 
-    radial-gradient(circle at var(--mx-pct) var(--my-pct), rgba(59, 192, 200, 0.12) 0%, transparent 50%),
-    linear-gradient(135deg, transparent 30%, rgba(59, 192, 200, 0.22) 45%, rgba(170, 120, 255, 0.3) 50%, rgba(59, 192, 200, 0.22) 55%, transparent 70%);
+  background: radial-gradient(
+    circle 160px at var(--mx-pct) var(--my-pct),
+    rgba(59, 192, 200, 0.25) 0%,
+    rgba(170, 120, 255, 0.05) 50%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
 }
 
 body.back-cyber .back-frame {
@@ -1324,9 +1359,13 @@ body.back-cosmic .card-back {
 }
 
 body.back-cosmic .card-back::after {
-  background: 
-    radial-gradient(circle at var(--mx-pct) var(--my-pct), rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-    linear-gradient(120deg, transparent 35%, rgba(255, 255, 255, 0.2) 50%, transparent 65%);
+  background: radial-gradient(
+    circle 160px at var(--mx-pct) var(--my-pct),
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(170, 120, 255, 0.04) 50%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
 }
 
 body.back-cosmic .back-frame {

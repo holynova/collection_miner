@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.3.9 - 2026-06-15
+
+### Features
+- **3D Layered Card Layout**: Distributed card components into 4 distinct physical depth layers (Title at 60px, URL/Subtitle at 38px, other elements at 20px, and card background at 0px) with corresponding multi-tiered mouse-driven parallax scaling.
+- **Spotlight Halo Glow**: Replaced sweeping linear foil reflection glare with an interactive, cursor-following radial point-light halo that adapts its glow color based on the card's rarity tier and active back style theme.
+
 ## 0.3.8 - 2026-05-28
 
 ### Features
