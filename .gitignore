@@ -1,0 +1,6 @@
+# Build artifacts
+collection_miner.zip
+
+# OS generated files
+.DS_Store
+Thumbs.db
