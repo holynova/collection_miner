@@ -82,3 +82,7 @@ chrome.bookmarks.onChildrenReordered.addListener(() => {
 chrome.bookmarks.onImportEnded.addListener(() => {
   syncBookmarks().catch(() => {});
 });
+
+chrome.action.onClicked.addListener(() => {
+  chrome.tabs.create({ url: "newtab.html" });
+});
