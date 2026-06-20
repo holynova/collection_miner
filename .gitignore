@@ -1,6 +1,9 @@
 # Build artifacts
-collection_miner.zip
+collection_miner*.zip
 
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Store assets are tracked (screenshots, promo tiles)
+# store-assets/ intentionally included in git

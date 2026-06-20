@@ -1,6 +1,6 @@
 {
   "name": "Collection Miner",
-  "description": "Randomly surface bookmarks on each new tab.",
+  "description": "Rediscover forgotten bookmarks and Douban records on every new tab, with weighted card ratings.",
   "version": "0.3.9",
   "manifest_version": 3,
   "icons": {
