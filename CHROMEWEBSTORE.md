@@ -59,8 +59,8 @@ Chinese (zh-CN) — also fully supports English
 | Store Icon [REQUIRED] | 128×128 PNG | ✅ Ready | icons/icon-128.png |
 | Screenshot 1 [REQUIRED] | 1280×800 or 640×400 | ✅ Ready | store-assets/screenshot-1-bookmarks.png |
 | Screenshot 2 [RECOMMENDED] | 1280×800 or 640×400 | ✅ Ready | store-assets/screenshot-2-editorial-cover.png |
-| Small Promo Tile [RECOMMENDED] | 440×280 | ⬜ Not created | |
-| Marquee Promo Tile | 1400×560 | ⬜ Not created | |
+| Small Promo Tile [RECOMMENDED] | 440×280 | ✅ Ready | store-assets/small-promo-tile.png |
+| Marquee Promo Tile | 1400×560 | ✅ Ready | store-assets/marquee-promo-tile.png |
 
 ### Screenshot Notes
 - Screenshot 1: Bookmarks on default card layout (Modern Magazine style) showing 3 cards in their rarity tiers
