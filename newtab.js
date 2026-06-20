@@ -796,6 +796,16 @@ function createCardElement(item, nodeIndex, stats) {
   faviconText.textContent = getInitial(title, item.url);
   if (ratingEl) ratingEl.remove();
 
+  // Hover card to expand domain to full URL
+  card.addEventListener("mouseenter", () => {
+    urlEl.textContent = item.url;
+    urlEl.classList.add("is-expanded");
+  });
+  card.addEventListener("mouseleave", () => {
+    urlEl.textContent = getDisplayDomain(item.url);
+    urlEl.classList.remove("is-expanded");
+  });
+
   async function handleVisit() {
     const updated = { ...(stats[item.id] || { shows: 0, clicks: 0, likes: 0, dislikes: 0, liked: false }) };
     updated.clicks += 1;
