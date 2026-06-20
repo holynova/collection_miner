@@ -1,3 +1,43 @@
+// ─── Custom Confirm Dialog ───────────────────────────────────────────
+function showConfirm({ message, okText = "删除", cancelText = "取消" } = {}) {
+  return new Promise((resolve) => {
+    const overlay = document.getElementById("confirm-overlay");
+    const msgEl   = document.getElementById("confirm-message");
+    const okBtn   = document.getElementById("confirm-ok");
+    const cancelBtn = document.getElementById("confirm-cancel");
+    if (!overlay) { resolve(window.confirm(message)); return; }
+
+    msgEl.textContent    = message || "";
+    okBtn.textContent    = okText;
+    cancelBtn.textContent = cancelText;
+
+    overlay.setAttribute("aria-hidden", "false");
+    overlay.classList.add("is-open");
+    cancelBtn.focus();
+
+    function finish(result) {
+      overlay.classList.remove("is-open");
+      overlay.setAttribute("aria-hidden", "true");
+      okBtn.removeEventListener("click", onOk);
+      cancelBtn.removeEventListener("click", onCancel);
+      overlay.removeEventListener("click", onBackdrop);
+      document.removeEventListener("keydown", onKey);
+      resolve(result);
+    }
+    const onOk      = () => finish(true);
+    const onCancel  = () => finish(false);
+    const onBackdrop = (e) => { if (e.target === overlay) finish(false); };
+    const onKey = (e) => {
+      if (e.key === "Escape") finish(false);
+      if (e.key === "Enter")  { e.preventDefault(); finish(true); }
+    };
+    okBtn.addEventListener("click", onOk);
+    cancelBtn.addEventListener("click", onCancel);
+    overlay.addEventListener("click", onBackdrop);
+    document.addEventListener("keydown", onKey);
+  });
+}
+
 // Polyfill/Mock for non-extension environments (like file:// during development)
 if (typeof chrome === "undefined" || !chrome.storage || !chrome.storage.local) {
   console.log("Running in non-extension context. Initializing mock chrome APIs.");
@@ -159,6 +199,8 @@ const I18N = {
     monthsAgo: "距今 {0}月",
     yearsAgo: "距今 {0}年",
     deleteConfirm: "确定要从收藏夹里删除这条吗？",
+    confirmOk: "删除",
+    confirmCancel: "取消",
     deleted1: "已删除 1 条书签",
     undo: "撤销",
     noImportYet: "还没有导入{0}数据。",
@@ -205,6 +247,8 @@ const I18N = {
     monthsAgo: "{0} months ago",
     yearsAgo: "{0} years ago",
     deleteConfirm: "Are you sure you want to delete this bookmark?",
+    confirmOk: "Delete",
+    confirmCancel: "Cancel",
     deleted1: "Deleted 1 bookmark",
     undo: "Undo",
     noImportYet: "No {0} data imported yet.",
@@ -765,7 +809,11 @@ function createCardElement(item, nodeIndex, stats) {
 
   deleteBtn.addEventListener("click", async (event) => {
     event.stopPropagation();
-    const ok = confirm(t("deleteConfirm"));
+    const ok = await showConfirm({
+      message: t("deleteConfirm"),
+      okText: t("confirmOk"),
+      cancelText: t("confirmCancel"),
+    });
     if (!ok) return;
     let node = null;
     try {
