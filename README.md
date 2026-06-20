@@ -1,88 +1,107 @@
 # Collection Miner / 收藏夹淘金
 
+> 每次打开新标签页，都能重新发现一条被遗忘的书签。
+
+![Screenshot](store-assets/screenshot-1-bookmarks.png)
+
+---
+
 ## 中文说明
 
-这是一个多维度、高颜值的 Chrome 插件，旨在让你在打开新标签页时，“淘”到你曾经收藏过但可能遗忘的珍宝。
+**Collection Miner** 是一个精致的 Chrome 插件，接管你的新标签页，从浏览器书签库中随机挑选 3 条，以卡片形式呈现。通过持续的点赞/点踩，系统会学习你的偏好，让真正喜欢的书签出现得更频繁。
 
-### 核心功能
+### 功能特性
 
-1.  **多来源支持 (Tabs)**：
-    -   **浏览器收藏夹**：随机展示 3 条书签。
-    -   **豆瓣书影音**：支持导入豆瓣“已读”、“想读”、“看过”、“想看”数据，随机展示你的精神食粮。
-2.  **动态权重系统**：
-    -   系统会记录展示、点击、赞/踩次数。
-    -   **点赞**（红心）会增加该条目未来出现的概率，**点踩**则降低。
-3.  **视觉分级系统**：
-    -   **稀有度 (Rarity)**：根据你的评价，条目会被赋予：`传说 (Legendary)`、`稀有 (Rare)`、`普通 (Common)`、`诅咒 (Cursed)`。
-    -   **历法分级 (Age Tier)**：根据收藏的长短，卡片呈现不同光泽：`金 (5年+)`、`紫 (3年+)`、`蓝 (2年+)`、`绿 (1年+)`、`白 (1年内)`。
-4.  **交互体验**：
-    -   **3D 悬浮效果**：卡片随鼠标倾斜，充满质感。
-    -   **氛围动效**：点赞触发粒子效果（五彩纸屑），卡片渐进式入场。
-    -   **动画重写 (Flip Animation)**：卡片采用无缝翻转进出场动画。
-    -   **双语支持 (i18n)**：右上角一键切换中英文界面。
-    -   **热键支持**：按下 `Enter` 键即可在当前分类下快速“再翻三张”。
-5.  **辅助管理功能**：
-    -   **更多菜单 (More Menu)**：将备份、导出、关闭重复标签页等功能收纳在“更多”菜单中，保持界面清爽。
-    -   **空状态提示 (Empty States)**：在没有导入数据时，提供更直观的空状态占位图和操作指引。
-    -   **关闭重复标签页**：当检测到打开了多个本插件的新标签页时，提供一键“关闭其他”按钮，保持工作区清爽。
-    -   **一键数据备份与恢复**：提供“导出数据”与“导入备份”功能，可将导入的所有豆瓣数据、卡牌权重统计及展示历史备份为本地 JSON 文件，防止卸载或重装插件时数据丢失。
+**动态权重系统**
+- 点赞（♥）让这条书签在未来更容易被抽到；点踩则相反。
+- 系统追踪每条书签的展示次数、点击次数、赞/踩次数，动态调整权重。
 
-### 使用说明
+**视觉分级**
+- **稀有度**：根据交互评分，卡片获得边框光晕等级——`传说 Legendary`（金）、`稀有 Rare`（紫/蓝）、`普通 Common`（白）、`诅咒 Cursed`（暗）。
+- **年龄层**：根据书签收藏的时间长短，卡片呈现不同光泽——`金（5年+）`、`紫（3年+）`、`蓝（2年+）`、`绿（1年+）`、`白（1年内）`。
 
--   **再翻三张**：随机刷新当前页面的内容。
--   **数据导入**：在对应分类标签页，点击下方导入按钮，上传你的数据 JSON（格式见示例）。
--   **操作卡片**：
-    -   可以直接点击卡片打开链接（并记录一次点击）。
-    -   左下角星形/心形点赞，增加权重。
-    -   右下角垃圾桶可直接删除书签（支持 8 秒内撤销）。
--   **备份与恢复**：点击右上角“导出数据”保存备份，点击“导入备份”选择导出的 JSON 文件即可一键恢复所有历史数据。
+**卡片交互**
+- 点击卡片正面 → 在新标签页打开书签链接（记录一次点击）。
+- ♥ 按钮 → 点赞，提升权重。
+- 🗑 按钮 → 删除书签（8 秒内可撤销）。
 
-使用截图：
+**高质感视觉设计**
+- 每张卡片都有 3D 鼠标跟随倾斜效果与交互式光晕。
+- 翻入/翻出均采用无缝 3D 翻转动画。
+- 卡背为青绿色调品牌设计（Collection / Miner）。
 
-![Screenshot](demo1.png)
+**快捷刷新**
+- 点击 `再翻三张` 按钮。
+- 按 `Enter` 或 `空格键`。
+- 点击页面任意空白区域。
+
+**数据管理**
+- 点击右上角 `⋯` 菜单 → **导出数据** / **导入备份**，将书签权重和历史记录保存为本地 JSON，防止数据丢失。
+
+**其他**
+- 中英文界面切换（右上角 `EN` 按钮）。
+- 检测到多个本插件新标签页时，提供一键"关闭其他"按钮。
 
 ---
 
 ## English
 
-A multi-dimensional, beautifully designed Chrome extension that helps you "mine" forgotten gems from your bookmarks and media history every time you open a new tab.
+**Collection Miner** is a focused Chrome extension that replaces your new tab page with a card-based view of your browser bookmarks. Each time you open a new tab, 3 bookmarks are randomly drawn from your library. Like and dislike them to teach the system your preferences over time.
 
-### Core Features
+### Features
 
-1.  **Multi-Source Support (Tabs)**:
-    -   **Browser Bookmarks**: Randomly displays 3 bookmarks.
-    -   **Douban Integration**: Import your "Read", "Wishlist", "Movies Seen", and "Watchlist" data from Douban.
-2.  **Dynamic Weighting**:
-    -   The system tracks shows, clicks, and likes/dislikes.
-    -   **Liking** increases the probability of higher rotation, while **Disliking** decreases it.
-3.  **Visual Tier System**:
-    -   **Rarity**: Based on your interaction, items are ranked: `Legendary`, `Rare`, `Common`, `Cursed`.
-    -   **Age Tier**: Cards exhibit different lusters based on how long ago they were added: `Gold (5yr+)`, `Purple (3yr+)`, `Blue (2yr+)`, `Green (1yr+)`, `White (New)`.
-4.  **Interactive Experience**:
-    -   **3D Tilt Effect**: Cards tilt and float based on mouse movement.
-    -   **Micro-animations**: Confetti effects for likes and smooth entrance animations.
-    -   **Flip Animations**: Seamless flip-in and flip-out animations for a natural card dealing feel.
-    -   **i18n**: Toggle between English and Chinese layouts.
-    -   **Hotkeys**: Press `Enter` to quickly refresh 3 cards.
-5.  **Utility Management**:
-    -   **More Menu**: Actions like backup, export, and closing duplicate tabs are grouped in a clean dropdown menu.
-    -   **Empty States**: Clear and beautiful empty state placeholders when data hasn't been imported yet.
-    -   **Close Duplicate Tabs**: Automatically detects multiple open Miner tabs and provides a "Close Others" button to keep your workspace neat.
-    -   **One-Click Backup & Restore**: Export all imported data, bookmarks statistics, and history records to a local JSON file, and easily import it back to prevent data loss.
+**Smart Weighting**
+- Liking (♥) a bookmark increases its chance of appearing again; disliking decreases it.
+- The system tracks impressions, clicks, and ratings to continuously refine what you see.
 
-### How to Use
+**Visual Tiers**
+- **Rarity**: Cards earn glowing border tiers based on your ratings — `Legendary` (gold), `Rare` (purple/blue), `Common` (white), `Cursed` (dark).
+- **Age Tier**: Cards display a metallic luster based on how long ago you saved them — `Gold (5yr+)`, `Purple (3yr+)`, `Blue (2yr+)`, `Green (1yr+)`, `White (new)`.
 
--   **Refresh**: Hit "Show 3 more" to rotate the current selection.
--   **Import Data**: In the category tabs, use the import button to upload your data in JSON format.
--   **Interacting with Cards**:
-    -   Directly click a card to open the link (counts as a click).
-    -   Click the Star/Heart icon to like and increase weight.
-    -   Click the Trash icon to delete from bookmarks (with an 8-second undo window).
--   **Backup & Restore**: Use "Export Data" in the top right header to save your data, and use "Import Backup" to restore from your exported JSON file.
+**Card Interactions**
+- Click a card → opens the bookmark link in a new tab (counts as a click).
+- ♥ → like and boost the bookmark's weight.
+- 🗑 → delete the bookmark (8-second undo window).
+
+**Premium Design**
+- Mouse-driven 3D tilt and interactive spotlight halo on every card.
+- Seamless flip-in / flip-out animations on refresh.
+- Teal-themed card backs with the Collection Miner branding.
+
+**Refresh Shortcuts**
+- Click the `Refresh` button.
+- Press `Enter` or `Space`.
+- Click any blank area on the page.
+
+**Data Management**
+- Click `⋯` in the top-right → **Export Data** / **Import Backup** to save all bookmark weights and history as a local JSON file.
+
+**More**
+- One-click Chinese / English language toggle (`EN` button, top-right).
+- Detects duplicate Miner tabs and offers a "Close Others" button to keep your workspace tidy.
+
+---
 
 ## 安装 / Install
 
-1.  打开 `chrome://extensions`
-2.  开启开发者模式
-3.  点击“加载已解压的扩展程序”
-4.  选择这个文件夹 / Select this folder
+**Chrome Web Store（推荐）**
+
+> *(即将上架 / Coming soon)*
+
+**手动安装 / Manual Install**
+
+1. 下载或克隆本仓库 / Download or clone this repository
+2. 打开 `chrome://extensions`
+3. 开启右上角「开发者模式」/ Enable "Developer mode"
+4. 点击「加载已解压的扩展程序」/ Click "Load unpacked"
+5. 选择本项目文件夹 / Select this project folder
+
+---
+
+## 隐私 / Privacy
+
+本插件完全本地运行，不收集、不传输任何数据。所有书签数据和权重仅存储在你的浏览器本地。
+
+This extension runs entirely locally. No data is collected or transmitted. All bookmark data and weights are stored only in your browser's local storage.
+
+→ [完整隐私政策 / Full Privacy Policy](https://holynova.github.io/collection_miner/)
