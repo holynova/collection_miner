@@ -14,11 +14,12 @@
       <nav class="toolbar">
         <div class="toolbar-left">
           <button class="tab-btn active" data-tab="bookmarks" type="button" data-i18n="tabBookmarks">收藏夹</button>
-          <button class="tab-btn" data-tab="douban-read" type="button"><span class="douban-icon">豆</span><span data-i18n="tabDoubanRead">已读</span></button>
-          <button class="tab-btn" data-tab="douban-wish" type="button"><span class="douban-icon">豆</span><span data-i18n="tabDoubanWish">想读</span></button>
-          <button class="tab-btn" data-tab="movie-seen" type="button"><span class="douban-icon">豆</span><span data-i18n="tabMovieSeen">看过</span></button>
-          <button class="tab-btn" data-tab="movie-wish" type="button"><span class="douban-icon">豆</span><span data-i18n="tabMovieWish">想看</span></button>
-          <span class="toolbar-divider"></span>
+          <!-- Douban tabs hidden: only bookmark mode shown -->
+          <button class="tab-btn" data-tab="douban-read" type="button" style="display:none"><span class="douban-icon">豆</span><span data-i18n="tabDoubanRead">已读</span></button>
+          <button class="tab-btn" data-tab="douban-wish" type="button" style="display:none"><span class="douban-icon">豆</span><span data-i18n="tabDoubanWish">想读</span></button>
+          <button class="tab-btn" data-tab="movie-seen" type="button" style="display:none"><span class="douban-icon">豆</span><span data-i18n="tabMovieSeen">看过</span></button>
+          <button class="tab-btn" data-tab="movie-wish" type="button" style="display:none"><span class="douban-icon">豆</span><span data-i18n="tabMovieWish">想看</span></button>
+          <span class="toolbar-divider" style="display:none"></span>
           
           <div class="tab-specific-actions" data-for="bookmarks">
             <button id="refresh-bookmarks" class="btn toolbar-action-btn" type="button" data-i18n="refreshBtn">再翻三张 ⏎</button>
@@ -106,22 +107,23 @@
         <footer class="footer" id="footer"></footer>
       </section>
 
-      <section class="tab-panel" id="tab-douban-read">
+      <!-- Douban panels hidden -->
+      <section class="tab-panel" id="tab-douban-read" style="display:none">
         <section class="cards" id="douban-read-cards"></section>
         <footer class="footer" id="douban-read-footer"></footer>
       </section>
 
-      <section class="tab-panel" id="tab-douban-wish">
+      <section class="tab-panel" id="tab-douban-wish" style="display:none">
         <section class="cards" id="douban-wish-cards"></section>
         <footer class="footer" id="douban-wish-footer"></footer>
       </section>
 
-      <section class="tab-panel" id="tab-movie-seen">
+      <section class="tab-panel" id="tab-movie-seen" style="display:none">
         <section class="cards" id="movie-seen-cards"></section>
         <footer class="footer" id="movie-seen-footer"></footer>
       </section>
 
-      <section class="tab-panel" id="tab-movie-wish">
+      <section class="tab-panel" id="tab-movie-wish" style="display:none">
         <section class="cards" id="movie-wish-cards"></section>
         <footer class="footer" id="movie-wish-footer"></footer>
       </section>

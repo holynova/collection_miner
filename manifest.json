@@ -1,6 +1,6 @@
 {
   "name": "Collection Miner",
-  "description": "Rediscover forgotten bookmarks and Douban records on every new tab, with weighted card ratings.",
+  "description": "Rediscover forgotten bookmarks on every new tab — with rarity tiers, weighted ratings and 3D cards.",
   "version": "0.3.9",
   "manifest_version": 3,
   "icons": {
