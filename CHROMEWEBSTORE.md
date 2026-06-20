@@ -58,13 +58,13 @@ Chinese (zh-CN) — also fully supports English
 |-------|-----------|--------|----------|
 | Store Icon [REQUIRED] | 128×128 PNG | ✅ Ready | icons/icon-128.png |
 | Screenshot 1 [REQUIRED] | 1280×800 or 640×400 | ✅ Ready | store-assets/screenshot-1-bookmarks.png |
-| Screenshot 2 [RECOMMENDED] | 1280×800 or 640×400 | ✅ Ready | store-assets/screenshot-2-douban-books.png |
+| Screenshot 2 [RECOMMENDED] | 1280×800 or 640×400 | ✅ Ready | store-assets/screenshot-2-editorial-cover.png |
 | Small Promo Tile [RECOMMENDED] | 440×280 | ⬜ Not created | |
 | Marquee Promo Tile | 1400×560 | ⬜ Not created | |
 
 ### Screenshot Notes
-- Screenshot 1: Bookmarks tab showing 3 cards (Legendary/Rare/Common) with gold/blue/white border tiers
-- Screenshot 2: Douban books tab showing 三体 / 人类简史 / 活着 with star ratings and rarity badges
+- Screenshot 1: Bookmarks on default card layout (Modern Magazine style) showing 3 cards in their rarity tiers
+- Screenshot 2: Bookmarks on alternative layout (Editorial Book Cover style) showing elegant serif typography and layouts
 
 ---
 
