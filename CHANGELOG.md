@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.4.0 - 2026-06-20
+
+### Features
+- **Bookmarks-Only Refactoring**: Simplified extension architecture to focus exclusively on bookmarks manager (hidden Douban integration).
+- **In-Page Custom Confirm Dialog**: Replaced browser confirm overlay with a custom styled confirm popup with an 8-second undo action.
+- **Card Metadata & Breadcrumb Simplification**: Redesigned card details to show clean hostnames/domains instead of raw URLs and styled folder paths as modern breadcrumb tracks (`📂 Folder › Subfolder`).
+- **Typography & Font Pairing**: Integrated external Google Fonts, styling "Editorial Cover" titles in serif (*Playfair Display*) and "Data Index Card" titles in monospace (*Fira Code*).
+- **Navigation Controls Hidden**: Redundant "Bookmarks" tab header hidden to maximize vertical space.
+- **Refined Refresh Shortcuts**: Wired Space and Enter keys as well as clicking empty areas to trigger bookmark draws with shortcut hints at the bottom of the card panel.
+
 ## 0.3.9 - 2026-06-15
 
 ### Features
