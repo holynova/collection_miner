@@ -394,7 +394,9 @@ function getPath(id, index) {
   let current = index[id];
   while (current && current.parentId && index[current.parentId]) {
     const parent = index[current.parentId];
-    if (parent.title) names.push(parent.title);
+    if (parent.title && parent.parentId !== "0") {
+      names.push(parent.title);
+    }
     current = parent;
   }
   return names.reverse().join(" › ") || t("uncategorized");

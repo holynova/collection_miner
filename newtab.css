@@ -707,7 +707,7 @@ h1 {
 .card-toolbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-top: auto;
   padding-top: 8px;
   border-top: 1px solid rgba(214, 162, 74, 0.15);
