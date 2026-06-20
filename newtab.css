@@ -1582,7 +1582,7 @@ body.back-cosmic .back-subtitle {
 }
 
 .refresh-main-btn {
-  background: linear-gradient(135deg, rgba(59, 192, 200, 0.15) 0%, rgba(0, 198, 167, 0.08) 100%);
+  background: transparent;
   border: 1px solid rgba(59, 192, 200, 0.45);
   color: #3bc0c8;
   padding: 12px 36px;
@@ -1602,10 +1602,10 @@ body.back-cosmic .back-subtitle {
 
 .refresh-main-btn:hover {
   transform: translateY(-2px);
-  background: linear-gradient(135deg, rgba(59, 192, 200, 0.25) 0%, rgba(0, 198, 167, 0.15) 100%);
+  background: rgba(59, 192, 200, 0.1);
   border-color: #3bc0c8;
   color: #fff;
-  box-shadow: 0 6px 20px rgba(59, 192, 200, 0.2), 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 20px rgba(59, 192, 200, 0.15), 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .refresh-main-btn:active {
