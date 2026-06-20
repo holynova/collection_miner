@@ -1,6 +1,9 @@
 :root {
   color-scheme: dark;
-  font-family: "Inter", "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: "Inter", "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-mono: "Fira Code", "Courier New", monospace;
+  font-family: var(--font-sans);
   --bg-deep: #1b2f26;
   --bg-mid: #2f5e4c;
   --bg-light: #3f755f;
@@ -662,6 +665,17 @@ h1 {
   word-break: break-word;
 }
 
+.tag.path {
+  border: none;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-dim);
+  opacity: 0.8;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
 .rating-stars {
   display: flex;
   gap: 3px;
@@ -1086,11 +1100,11 @@ body.layout-b .card-content {
   margin-top: auto;
 }
 body.layout-b .title {
-  font-family: "Outfit", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--font-serif);
   font-size: 24px;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.4;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 body.layout-b .favicon {
   border-radius: 50%;
@@ -1120,19 +1134,23 @@ body.layout-c .favicon {
   border-radius: 2px;
 }
 body.layout-c .title {
-  font-family: monospace;
-  font-size: 16px;
-  letter-spacing: 0.5px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  letter-spacing: 0.2px;
   font-weight: normal;
   -webkit-line-clamp: 4;
 }
 body.layout-c .url {
-  font-family: monospace;
+  font-family: var(--font-mono);
   background: rgba(0, 0, 0, 0.3);
   padding: 6px 8px;
   border-radius: 4px;
   margin-top: 12px;
   color: var(--gold-bright);
+}
+body.layout-c .path,
+body.layout-c .meta-date {
+  font-family: var(--font-mono);
 }
 body.layout-c .card-footer {
   border-top: 1px dashed rgba(255, 255, 255, 0.2);

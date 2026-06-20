@@ -397,7 +397,7 @@ function getPath(id, index) {
     if (parent.title) names.push(parent.title);
     current = parent;
   }
-  return names.reverse().join(" / ") || t("uncategorized");
+  return names.reverse().join(" › ") || t("uncategorized");
 }
 
 function pickRandomUnique(items, count) {
@@ -740,6 +740,19 @@ function renderStars(container, value) {
   }
 }
 
+function getDisplayDomain(url) {
+  try {
+    const urlObj = new URL(url);
+    let hostname = urlObj.hostname;
+    if (hostname.startsWith("www.")) {
+      hostname = hostname.substring(4);
+    }
+    return hostname;
+  } catch (e) {
+    return url;
+  }
+}
+
 function createCardElement(item, nodeIndex, stats) {
   const template = document.getElementById("card-template");
   const clone = template.content.cloneNode(true);
@@ -773,8 +786,9 @@ function createCardElement(item, nodeIndex, stats) {
   }
 
   titleEl.textContent = title;
-  urlEl.textContent = item.url;
-  pathEl.textContent = path;
+  urlEl.textContent = getDisplayDomain(item.url);
+  urlEl.title = item.url;
+  pathEl.innerHTML = `<span style="opacity: 0.6; margin-right: 4px;">📂</span>${path}`;
   dateEl.textContent = item.dateAdded
     ? t("addedOn", formatDate(item.dateAdded), formatElapsed(item.dateAdded))
     : "";
