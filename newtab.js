@@ -224,7 +224,11 @@ const I18N = {
     backCosmic: "星宿物语 (极简蓝)",
     emptyStateIcon: "📂",
     emptyStateText: "还没有导入{0}数据。\n点击上方按钮导入 JSON 文件开始探索！",
-    tipsBtn: "导入教程"
+    tipsBtn: "导入教程",
+    refreshBtnMain: "再翻三张",
+    refreshHintPrefix: "按",
+    refreshHintOr: "或",
+    refreshHintSuffix: "也能翻页"
   },
   en: {
     appTitle: "Bookmark Miner",
@@ -272,7 +276,11 @@ const I18N = {
     backCosmic: "Celestial (Minimalist)",
     emptyStateIcon: "📂",
     emptyStateText: "No {0} data imported yet.\nClick the import button above to get started!",
-    tipsBtn: "Import Guide"
+    tipsBtn: "Import Guide",
+    refreshBtnMain: "Show 3 More",
+    refreshHintPrefix: "Press",
+    refreshHintOr: "or",
+    refreshHintSuffix: "to flip"
   }
 };
 
@@ -1198,8 +1206,7 @@ function setBuildBadge() {
 
   const versionEl = document.getElementById("version-badge");
   if (versionEl) {
-    const appName = t("appTitle");
-    versionEl.textContent = `${appName} v${version}`;
+    versionEl.textContent = `v${version}`;
   }
 }
 
@@ -1306,6 +1313,7 @@ function withLoading(btnId, asyncFn) {
 
 function setSeriesButtons() {
   withLoading("refresh-bookmarks", () => showRandomBookmarks());
+  withLoading("refresh-bookmarks-main", () => showRandomBookmarks());
   withLoading("refresh-douban-read", () => showRandomSeries(doubanRead, "douban-read-cards", "douban-read-footer", "tabDoubanRead"));
   withLoading("refresh-douban-wish", () => showRandomSeries(doubanWish, "douban-wish-cards", "douban-wish-footer", "tabDoubanWish"));
   withLoading("refresh-movie-seen", () => showRandomSeries(movieSeen, "movie-seen-cards", "movie-seen-footer", "tabMovieSeen"));
@@ -1616,11 +1624,13 @@ initLang().catch(() => {});
 initLayoutSelect();
 initBackStyleSelect();
 
-function triggerVisibleRefresh() {
-  const visibleRefreshBtn = Array.from(document.querySelectorAll("button[id^='refresh-']"))
-    .find(btn => btn.offsetWidth > 0 || btn.offsetHeight > 0);
-  if (visibleRefreshBtn) {
-    visibleRefreshBtn.click();
+function triggerBookmarksRefresh() {
+  const mainBtn = document.getElementById("refresh-bookmarks-main");
+  if (mainBtn) {
+    mainBtn.click();
+  } else {
+    const hiddenBtn = document.getElementById("refresh-bookmarks");
+    if (hiddenBtn) hiddenBtn.click();
   }
 }
 
@@ -1631,16 +1641,16 @@ document.addEventListener("keydown", (event) => {
     const tag = document.activeElement?.tagName;
     if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA" || tag === "BUTTON" || tag === "A") return;
     event.preventDefault();
-    triggerVisibleRefresh();
+    triggerBookmarksRefresh();
   }
 });
 
 // Click on page blank area to refresh
 document.addEventListener("click", (event) => {
   const interactive = event.target.closest(
-    "button, a, input, select, label, .card, .more-menu, .more-menu-wrapper, .toolbar, .toast"
+    "button, a, input, select, label, .card, .more-menu, .more-menu-wrapper, .toolbar, .toast, .refresh-zone"
   );
   if (!interactive) {
-    triggerVisibleRefresh();
+    triggerBookmarksRefresh();
   }
 });
