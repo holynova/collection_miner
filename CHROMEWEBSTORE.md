@@ -138,7 +138,8 @@ https://holynova.github.io/collection_miner/
 
 | Version | Date | Changes | Status |
 |---------|------|---------|--------|
-| 0.3.9 | 2026-06-15 | 3D Layered Card Layout with depth parallax; Spotlight Halo cursor-following glow per rarity tier | Draft |
+| 0.4.0 | 2026-06-20 | Bookmarks-only layout refactoring; custom in-page delete confirmation; clean folder path breadcrumbs; Google serif/monospace fonts integration; layout style enhancements; card metadata layout & 3D parallax depth adjustments | Draft |
+| 0.3.9 | 2026-06-15 | 3D Layered Card Layout with depth parallax; Spotlight Halo cursor-following glow per rarity tier | — |
 | 0.3.8 | 2026-05-28 | Card Back Styles: 3 premium themes (Royal Classic, Cyber Neon, Celestial Constellation) | — |
 | 0.3.0 | 2026-05-21 | UI Overhaul; More Menu; Empty States; Flip Animations; Enter hotkey | — |
 | 0.2.0 | 2026-05-20 | Close Duplicate Tabs; Export/Import Backup | — |
