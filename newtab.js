@@ -225,10 +225,9 @@ const I18N = {
     emptyStateIcon: "📂",
     emptyStateText: "还没有导入{0}数据。\n点击上方按钮导入 JSON 文件开始探索！",
     tipsBtn: "导入教程",
-    refreshBtnMain: "再翻三张",
-    refreshHintPrefix: "按",
-    refreshHintOr: "或",
-    refreshHintSuffix: "也能翻页"
+    flipHintClick: "点击空白处、按",
+    flipHintOr: "或",
+    flipHintSuffix: "键即可翻页"
   },
   en: {
     appTitle: "Bookmark Miner",
@@ -277,10 +276,9 @@ const I18N = {
     emptyStateIcon: "📂",
     emptyStateText: "No {0} data imported yet.\nClick the import button above to get started!",
     tipsBtn: "Import Guide",
-    refreshBtnMain: "Show 3 More",
-    refreshHintPrefix: "Press",
-    refreshHintOr: "or",
-    refreshHintSuffix: "to flip"
+    flipHintClick: "Click blank space, press",
+    flipHintOr: "or",
+    flipHintSuffix: "to flip pages"
   }
 };
 
@@ -1013,10 +1011,12 @@ function buildMediaCards(items, containerId, footerId, label, totalCount = 0, sc
 }
 
 function renderFooter(total) {
-  const footer = document.getElementById("footer");
-  footer.textContent = total
-    ? t("totalBookmarks", total)
-    : t("noBookmarks");
+  const badge = document.getElementById("bookmark-count-badge");
+  if (badge) {
+    badge.textContent = total
+      ? t("totalBookmarks", total)
+      : t("noBookmarks");
+  }
 }
 
 async function fillSelection() {
@@ -1313,7 +1313,6 @@ function withLoading(btnId, asyncFn) {
 
 function setSeriesButtons() {
   withLoading("refresh-bookmarks", () => showRandomBookmarks());
-  withLoading("refresh-bookmarks-main", () => showRandomBookmarks());
   withLoading("refresh-douban-read", () => showRandomSeries(doubanRead, "douban-read-cards", "douban-read-footer", "tabDoubanRead"));
   withLoading("refresh-douban-wish", () => showRandomSeries(doubanWish, "douban-wish-cards", "douban-wish-footer", "tabDoubanWish"));
   withLoading("refresh-movie-seen", () => showRandomSeries(movieSeen, "movie-seen-cards", "movie-seen-footer", "tabMovieSeen"));
@@ -1625,13 +1624,8 @@ initLayoutSelect();
 initBackStyleSelect();
 
 function triggerBookmarksRefresh() {
-  const mainBtn = document.getElementById("refresh-bookmarks-main");
-  if (mainBtn) {
-    mainBtn.click();
-  } else {
-    const hiddenBtn = document.getElementById("refresh-bookmarks");
-    if (hiddenBtn) hiddenBtn.click();
-  }
+  const hiddenBtn = document.getElementById("refresh-bookmarks");
+  if (hiddenBtn) hiddenBtn.click();
 }
 
 // Enter or Space to refresh

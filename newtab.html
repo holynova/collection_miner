@@ -15,6 +15,7 @@
         <div class="toolbar-left">
           <!-- 收藏夹 tab hidden: only one source, tab label not needed -->
           <button class="tab-btn active" data-tab="bookmarks" type="button" data-i18n="tabBookmarks" style="display:none">收藏夹</button>
+          <div id="bookmark-count-badge" class="bookmark-count-badge"></div>
           <!-- Douban tabs hidden: only bookmark mode shown -->
           <button class="tab-btn" data-tab="douban-read" type="button" style="display:none"><span class="douban-icon">豆</span><span data-i18n="tabDoubanRead">已读</span></button>
           <button class="tab-btn" data-tab="douban-wish" type="button" style="display:none"><span class="douban-icon">豆</span><span data-i18n="tabDoubanWish">想读</span></button>
@@ -90,13 +91,12 @@
       <section class="tab-panel active" id="tab-bookmarks">
         <section class="cards" id="cards"></section>
         <div class="refresh-zone">
-          <button id="refresh-bookmarks-main" class="refresh-main-btn" type="button" data-i18n="refreshBtnMain">再翻三张</button>
           <p class="refresh-hint">
-            <span data-i18n="refreshHintPrefix">按</span>
+            <span data-i18n="flipHintClick">点击空白处、按</span>
             <kbd>Space</kbd>
-            <span data-i18n="refreshHintOr">或</span>
+            <span data-i18n="flipHintOr">或</span>
             <kbd>Enter</kbd>
-            <span data-i18n="refreshHintSuffix">也能翻页</span>
+            <span data-i18n="flipHintSuffix">键即可翻页</span>
           </p>
         </div>
         <footer class="footer" id="footer"></footer>

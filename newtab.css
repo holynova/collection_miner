@@ -1581,38 +1581,6 @@ body.back-cosmic .back-subtitle {
   margin: 32px 0 20px;
 }
 
-.refresh-main-btn {
-  background: transparent;
-  border: 1px solid rgba(59, 192, 200, 0.45);
-  color: #3bc0c8;
-  padding: 12px 36px;
-  font-size: 15px;
-  font-weight: 500;
-  font-family: inherit;
-  border-radius: 30px;
-  cursor: pointer;
-  letter-spacing: 0.08em;
-  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-}
-
-.refresh-main-btn:hover {
-  transform: translateY(-2px);
-  background: rgba(59, 192, 200, 0.1);
-  border-color: #3bc0c8;
-  color: #fff;
-  box-shadow: 0 6px 20px rgba(59, 192, 200, 0.15), 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.refresh-main-btn:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
 .refresh-hint {
   font-size: 11px;
   color: var(--text-dim);
@@ -1633,5 +1601,20 @@ body.back-cosmic .back-subtitle {
   margin: 0 2px;
   color: var(--text-main);
   text-transform: uppercase;
+}
+
+/* ===== Bookmark Count Badge ===== */
+.bookmark-count-badge {
+  border: 1px solid rgba(214, 162, 74, 0.2);
+  background: rgba(214, 162, 74, 0.05);
+  color: var(--gold-bright);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-family: inherit;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+  user-select: none;
+  opacity: 0.85;
 }
 
