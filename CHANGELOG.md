@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Features
 - **Bookmarks-Only Refactoring**: Simplified extension architecture to focus exclusively on bookmarks manager (hidden Douban integration).
 - **In-Page Custom Confirm Dialog**: Replaced browser confirm overlay with a custom styled confirm popup with an 8-second undo action.
+- **Card Metadata & 3D Parallax Adjustments**: Moved card date/year metadata (`.meta-date`) to the link layer (`translateZ(38px)` and parallax variables matching the URL layer) and optimized metadata formatting using a clean bullet separator (`  •  `) and magazine-style typography.
 - **Card Metadata & Breadcrumb Simplification**: Redesigned card details to show clean hostnames/domains instead of raw URLs and styled folder paths as modern breadcrumb tracks (`📂 Folder › Subfolder`).
 - **Typography & Font Pairing**: Integrated external Google Fonts, styling "Editorial Cover" titles in serif (*Playfair Display*) and "Data Index Card" titles in monospace (*Fira Code*).
 - **Navigation Controls Hidden**: Redundant "Bookmarks" tab header hidden to maximize vertical space.
