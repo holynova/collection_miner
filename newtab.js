@@ -792,8 +792,8 @@ function createCardElement(item, nodeIndex, stats) {
   dateEl.textContent = item.dateAdded
     ? t("addedOn", formatDate(item.dateAdded), formatElapsed(item.dateAdded))
     : "";
-  favicon.style.backgroundImage = `url('${faviconUrl(item.url)}')`;
-  faviconText.textContent = getInitial(title, item.url);
+  if (favicon) favicon.style.backgroundImage = `url('${faviconUrl(item.url)}')`;
+  if (faviconText) faviconText.textContent = getInitial(title, item.url);
   if (ratingEl) ratingEl.remove();
 
   // Hover card to expand domain to full URL
@@ -995,8 +995,8 @@ function buildMediaCards(items, containerId, footerId, label, totalCount = 0, sc
     dateEl.textContent = readMs
       ? t("readOn", formatDate(readMs), formatElapsed(readMs))
       : "";
-    favicon.style.backgroundImage = item.link ? `url('${faviconUrl(item.link)}')` : "";
-    faviconText.textContent = getInitial(item.title, item.link);
+    if (favicon) favicon.style.backgroundImage = item.link ? `url('${faviconUrl(item.link)}')` : "";
+    if (faviconText) faviconText.textContent = getInitial(item.title, item.link);
 
     if (isWish) {
       if (ratingEl) ratingEl.remove();
