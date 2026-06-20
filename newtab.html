@@ -76,26 +76,9 @@
                 <span data-i18n="importBackup">导入备份</span>
                 <input id="import-backup-file" type="file" accept="application/json" />
               </label>
-              <div class="more-menu-divider"></div>
-              <div class="more-menu-item more-menu-select-row">
-                <span data-i18n="layoutLabel">卡面排版</span>
-                <select id="layout-select">
-                  <option value="layout-a" data-i18n="layoutA" selected>现代杂志风</option>
-                  <option value="layout-default" data-i18n="layoutDefault">默认风格</option>
-                  <option value="layout-b" data-i18n="layoutB">优雅书封风</option>
-                  <option value="layout-c" data-i18n="layoutC">档案索引卡</option>
-                </select>
-              </div>
-              <div class="more-menu-item more-menu-select-row">
-                <span data-i18n="backStyleLabel">卡背样式</span>
-                <select id="back-style-select">
-                  <option value="back-classic" data-i18n="backClassic" selected>皇家金雀 (经典金)</option>
-                  <option value="back-cyber" data-i18n="backCyber">赛博霓虹 (科幻蓝)</option>
-                  <option value="back-cosmic" data-i18n="backCosmic">星宿物语 (极简蓝)</option>
-                </select>
-              </div>
-              <div class="more-menu-divider"></div>
-              <div class="more-menu-item more-menu-build" id="corner-badge"></div>
+              <!-- layout-select and back-style-select kept in DOM (hidden) for JS compatibility -->
+              <select id="layout-select" style="display:none"></select>
+              <select id="back-style-select" style="display:none"></select>
             </div>
           </div>
           <button id="lang-switch" class="btn icon-btn lang-switch-btn" type="button" title="Language">EN</button>
@@ -134,9 +117,10 @@
         <div class="card-inner">
           <div class="card-face card-back">
             <div class="back-frame">
-              <div class="back-symbol">♣</div>
-              <div class="back-title">MINER</div>
-              <div class="back-subtitle">BOOKMARKS</div>
+              <div class="back-logo">♠</div>
+              <div class="back-name">Collection</div>
+              <div class="back-name back-name-sub">Miner</div>
+              <div class="back-tagline">收藏夹淘金</div>
             </div>
           </div>
           <div class="card-face card-front">

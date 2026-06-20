@@ -456,21 +456,37 @@ h1 {
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.35));
 }
 
-.back-symbol {
-  font-size: 48px;
-  color: var(--gold-bright);
-  text-shadow: 0 0 18px rgba(214, 162, 74, 0.35);
+.back-logo {
+  font-size: 40px;
+  color: rgba(255, 255, 255, 0.25);
+  line-height: 1;
+  margin-bottom: 6px;
 }
 
-.back-title {
-  font-size: 18px;
-  letter-spacing: 0.3em;
+.back-name {
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+  line-height: 1.1;
 }
 
-.back-subtitle {
-  font-size: 12px;
-  letter-spacing: 0.24em;
-  color: var(--text-dim);
+.back-name.back-name-sub {
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.35em;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: -2px;
+}
+
+.back-tagline {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.25);
+  margin-top: 10px;
+  text-transform: uppercase;
 }
 
 .card-front {

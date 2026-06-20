@@ -1568,12 +1568,31 @@ initLang().catch(() => {});
 initLayoutSelect();
 initBackStyleSelect();
 
+function triggerVisibleRefresh() {
+  const visibleRefreshBtn = Array.from(document.querySelectorAll("button[id^='refresh-']"))
+    .find(btn => btn.offsetWidth > 0 || btn.offsetHeight > 0);
+  if (visibleRefreshBtn) {
+    visibleRefreshBtn.click();
+  }
+}
+
+// Enter or Space to refresh
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    const visibleRefreshBtn = Array.from(document.querySelectorAll("button[id^='refresh-']"))
-      .find(btn => btn.offsetWidth > 0 || btn.offsetHeight > 0);
-    if (visibleRefreshBtn) {
-      visibleRefreshBtn.click();
-    }
+  if (event.key === "Enter" || event.key === " ") {
+    // Don't intercept Space inside inputs, selects, buttons, or textareas
+    const tag = document.activeElement?.tagName;
+    if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA" || tag === "BUTTON" || tag === "A") return;
+    event.preventDefault();
+    triggerVisibleRefresh();
+  }
+});
+
+// Click on page blank area to refresh
+document.addEventListener("click", (event) => {
+  const interactive = event.target.closest(
+    "button, a, input, select, label, .card, .more-menu, .more-menu-wrapper, .toolbar, .toast"
+  );
+  if (!interactive) {
+    triggerVisibleRefresh();
   }
 });
