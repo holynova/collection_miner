@@ -19,7 +19,6 @@ zip -r "$ZIP_FILE" \
     newtab.css \
     newtab.js \
     service-worker.js \
-    tips.html \
     icons/
 
 if [ $? -eq 0 ]; then

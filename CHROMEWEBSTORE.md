@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — Collection Miner
 
-> Last Updated: 2026-06-20
+> Last Updated: 2026-06-25
 
 ## Store Listing
 
@@ -8,12 +8,12 @@
 Collection Miner
 
 **Short Description** (90 chars — CWS max 132)
-Rediscover forgotten bookmarks & Douban records on every new tab, with a smart weighting system.
+Rediscover forgotten bookmarks on every new tab, with a smart weighting system.
 
 **Detailed Description**
-Collection Miner turns your new tab page into a daily treasure hunt through your own saved bookmarks and Douban media records.
+Collection Miner turns your new tab page into a daily treasure hunt through your own saved browser bookmarks.
 
-Every time you open a new tab, the extension randomly surfaces 3 items from your browser bookmarks or imported Douban data (books read, wish list, movies seen, watch list). The more you interact with a card — liking, clicking, or disliking — the smarter the weighting becomes, so the content you love rises to the top and the items you dislike fade away.
+Every time you open a new tab, the extension randomly surfaces 3 items from your browser bookmarks. The more you interact with a card — liking, clicking, or disliking — the smarter the weighting becomes, so the content you love rises to the top and the items you dislike fade away.
 
 Key features:
 
@@ -25,19 +25,17 @@ Rarity Tiers: Items earn visual rarity badges based on your interactions — Leg
 
 Age Tiers: Cards display a metallic luster based on how long ago they were saved — Gold (5yr+), Purple (3yr+), Blue (2yr+), Green (1yr+), White (new).
 
-Douban Integration: Import your Douban books (read / wish list) and movies (seen / watch list) as JSON, then mine through your reading and watching history the same way you mine bookmarks.
-
 Premium Card Design: Each card features a 3D tilt effect driven by mouse movement, an interactive cursor-following spotlight halo, seamless flip animations, and three premium card-back themes (Royal Classic, Cyber Neon, Celestial Constellation).
 
 Bilingual UI: Switch between Chinese and English interfaces with a single click.
 
 Keyboard Shortcut: Press Enter to refresh the current 3 cards.
 
-Data Backup: Export and import all your data (weights, history, Douban records) as a local JSON file at any time.
+Data Backup: Export and import all your data (weights, history) as a local JSON file at any time.
 
 Privacy: All data is stored locally on your device. Nothing is collected, transmitted, or shared. See our privacy policy for full details.
 
-To get started, install the extension and open a new tab — your bookmarks will appear immediately. To add Douban data, click a Douban tab and import your JSON file.
+To get started, install the extension and open a new tab — your bookmarks will appear immediately.
 
 For questions or feedback, visit the GitHub repository linked in the extension.
 
@@ -45,7 +43,7 @@ For questions or feedback, visit the GitHub repository linked in the extension.
 Productivity
 
 **Single Purpose**
-Randomly surfaces bookmarks and imported Douban media records on every new tab, with a dynamic weighting system based on user interactions.
+Randomly surfaces bookmarks on every new tab, with a dynamic weighting system based on user interactions.
 
 **Primary Language**
 Chinese (zh-CN) — also fully supports English
@@ -143,7 +141,7 @@ https://holynova.github.io/collection_miner/
 | 0.3.8 | 2026-05-28 | Card Back Styles: 3 premium themes (Royal Classic, Cyber Neon, Celestial Constellation) | — |
 | 0.3.0 | 2026-05-21 | UI Overhaul; More Menu; Empty States; Flip Animations; Enter hotkey | — |
 | 0.2.0 | 2026-05-20 | Close Duplicate Tabs; Export/Import Backup | — |
-| 0.1.0 | 2026-03-20 | Initial release — Bookmark Miner with Douban integration, dynamic weighting, rarity/age tiers | — |
+| 0.1.0 | 2026-03-20 | Initial release — Bookmark Miner with dynamic weighting, rarity/age tiers | — |
 
 ---
 
