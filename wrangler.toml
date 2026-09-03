@@ -1,0 +1,10 @@
+name = "collection-miner"
+compatibility_date = "2026-09-03"
+workers_dev = false
+
+[assets]
+directory = "./docs"
+
+[[routes]]
+pattern = "collection-miner.xiaosang.cc"
+custom_domain = true
