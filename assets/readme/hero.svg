@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="360" viewBox="0 0 1200 360"
+     role="img" aria-labelledby="title desc">
+  <title id="title">Collection Miner · 收藏夹淘金 — 每次打开新标签页，重新发现一条被遗忘的书签</title>
+  <desc id="desc">深绿毡面底标题：Collection Miner 收藏夹淘金，副标题每次打开新标签页，重新发现一条被遗忘的书签；右侧三张书签卡片并排，边框分别是白色普通、紫色稀有、金色传说。</desc>
+
+  <g id="bg">
+    <rect width="1200" height="360" rx="26" fill="#0e2e23"/>
+  </g>
+
+  <g id="title-block" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <text x="56" y="62" font-size="19" letter-spacing="3" fill="#d4a742">CHROME 扩展 · NEW TAB · MANIFEST V3</text>
+    <text x="56" y="130" font-size="58" font-weight="700" fill="#f5f0e1">Collection Miner</text>
+    <text x="56" y="172" font-size="23" fill="#e8e8e8">收藏夹淘金 — 每次打开新标签页，重新发现被遗忘的书签</text>
+    <text x="56" y="208" font-size="19" fill="#9db8a9">随机抽 3 张书签卡片，点赞点踩教它你的偏好，越喜欢出现得越频繁。</text>
+    <g id="chips" font-size="18" fill="#e8e8e8" text-anchor="middle">
+      <g><rect x="56" y="238" width="126" height="36" rx="18" fill="#143d2f" stroke="#2a5c48" stroke-width="1.5"/><text x="119" y="262">每次抽 3 张</text></g>
+      <g><rect x="194" y="238" width="150" height="36" rx="18" fill="#143d2f" stroke="#2a5c48" stroke-width="1.5"/><text x="269" y="262">权重学习偏好</text></g>
+      <g><rect x="356" y="238" width="186" height="36" rx="18" fill="#143d2f" stroke="#2a5c48" stroke-width="1.5"/><text x="449" y="262">稀有度 × 年龄层</text></g>
+      <g><rect x="554" y="238" width="126" height="36" rx="18" fill="#143d2f" stroke="#2a5c48" stroke-width="1.5"/><text x="617" y="262">完全本地</text></g>
+    </g>
+  </g>
+
+  <g id="cards" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <g id="card-white">
+      <rect x="706" y="84" width="150" height="200" rx="14" fill="#10160f" stroke="#e8e8e8" stroke-width="2.5"/>
+      <text x="720" y="112" font-size="12" fill="#888888">2026-06-15 · 5 天前</text>
+      <text x="720" y="142" font-size="17" font-weight="700" fill="#f5f0e1">Google Search</text>
+      <text x="720" y="166" font-size="13" fill="#d4a742">google.com</text>
+      <text x="720" y="190" font-size="12" fill="#888888">○ COMMON</text>
+      <text x="720" y="260" font-size="13" fill="#888888">📂 Root</text>
+      <text x="826" y="264" font-size="18" fill="#e5484d">♥</text>
+    </g>
+    <g id="card-rare">
+      <rect x="868" y="84" width="150" height="200" rx="14" fill="#10160f" stroke="#8b5cf6" stroke-width="2.5"/>
+      <text x="882" y="112" font-size="12" fill="#888888">2023-03-08 · 3.3 年</text>
+      <text x="882" y="142" font-size="17" font-weight="700" fill="#f5f0e1">V2EX</text>
+      <text x="882" y="166" font-size="13" fill="#d4a742">v2ex.com</text>
+      <text x="882" y="190" font-size="12" fill="#a78bfa">◆ RARE</text>
+      <text x="882" y="260" font-size="13" fill="#888888">📂 Root</text>
+      <text x="988" y="264" font-size="18" fill="#e5484d">♥</text>
+    </g>
+    <g id="card-legendary">
+      <rect x="1030" y="84" width="150" height="200" rx="14" fill="#10160f" stroke="#d4a742" stroke-width="3"/>
+      <text x="1044" y="112" font-size="12" fill="#888888">2020-12-28 · 5.5 年</text>
+      <text x="1044" y="142" font-size="17" font-weight="700" fill="#f5f0e1">Hacker News</text>
+      <text x="1044" y="166" font-size="13" fill="#d4a742">ycombinator.com</text>
+      <text x="1044" y="190" font-size="12" fill="#d4a742">★ LEGENDARY</text>
+      <text x="1044" y="260" font-size="13" fill="#888888">📂 Root</text>
+    </g>
+  </g>
+</svg>
