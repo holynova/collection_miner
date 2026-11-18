@@ -1,24 +1,24 @@
+<p align="right"><a href="README.en.md">English</a></p>
+
 <p align="center">
   <img src="./assets/readme/hero.svg" width="100%" alt="Collection Miner · 收藏夹淘金 — 每次打开新标签页，重新发现一条被遗忘的书签；右侧三张书签卡片并排，白色普通、紫色稀有、金色传说">
 </p>
 
 <p align="center">
-  <a href="https://xiaosang.cc/collection-miner/">▶ 隐私政策与介绍 Privacy &amp; Intro</a>
+  <a href="https://xiaosang.cc/collection-miner/">▶ 隐私政策与介绍</a>
   ·
   <a href="https://github.com/holynova/collection_miner">GitHub 仓库</a>
 </p>
 
 Collection Miner（收藏夹淘金）是一款 Chrome 扩展（Manifest V3，v0.4.0），接管你的新标签页：每次打开，从书签库里按权重随机抽 3 条，以卡片形式呈现。点赞让一条书签以后更容易被抽到，点踩则相反——系统会学习你的偏好，让真正喜欢的书签出现得更频繁。全部数据只存本地，不收集、不传输。
 
-Collection Miner is a Chrome extension (Manifest V3, v0.4.0) that takes over your new tab page: every time you open one, it draws 3 bookmarks from your library by weight and shows them as cards. Liking a bookmark makes it more likely to be drawn again; disliking does the opposite — the system learns your taste over time. Everything stays local; nothing is collected or transmitted.
-
-## 截图 / Screenshot
+## 截图
 
 <p align="center">
   <img src="./assets/readme/screenshot.png" width="100%" alt="新标签页：三张书签卡片并排，Google Search（白边，5 天前）、V2EX Community（紫边，3.3 年前）、Hacker News（金边，5.5 年前），下方提示点空白处或按空格/回车换一批">
 </p>
 
-## 功能 / Features
+## 功能
 
 - **动态权重**：每条书签的抽取权重 = 1 + 点赞数 − 点踩数（最低 0.2）；系统追踪每条书签的展示、点击、赞/踩次数。最近抽过的 60 条会暂缓重复出现（书签总数 ≥ 12 时生效）。
 - **稀有度**：按赞踩净分（赞 − 踩）分级——传说 Legendary（金，≥ +5）、稀有 Rare（紫，≥ +2）、普通 Common（白）、诅咒 Cursed（暗，净分为负）。
@@ -29,7 +29,7 @@ Collection Miner is a Chrome extension (Manifest V3, v0.4.0) that takes over you
 - **数据管理**：右上角 `⋯` 菜单可导出数据 / 导入备份（本地 JSON 文件 `collection_miner_backup_日期.json`）。
 - **其他**：中英文界面切换；检测到多个本插件新标签页时，提供一键「关闭其他」。
 
-## 安装 / Install
+## 安装
 
 Chrome 应用商店版本即将上架，目前手动安装：
 
@@ -39,13 +39,13 @@ Chrome 应用商店版本即将上架，目前手动安装：
 
 打包发布：`./zip_extension.sh`（生成 `collection_miner-vX.X.X.zip`，只含扩展运行必需文件）。
 
-## 隐私 / Privacy
+## 隐私
 
 完全本地运行，不收集、不传输任何数据。书签数据与权重只存在浏览器本地存储中；权限只有三项：`bookmarks`（读书签）、`storage`（存权重与历史）、`tabs`（检测重复标签页）。
 
 → [完整隐私政策](https://xiaosang.cc/collection-miner/)（另见 `PRIVACY.md`）
 
-## 技术 / Tech
+## 技术
 
 - Manifest V3，零构建、零依赖：`service-worker.js` 在安装/启动/书签变化时把书签树拍扁同步到 `chrome.storage.local`，新标签页从本地快照抽卡。
 - 版本历史见 `CHANGELOG.md`（v0.4.0 起专注书签管理）。
@@ -60,16 +60,3 @@ icons/              16/48/128 三档图标
 store-assets/       应用商店宣传图与截图
 docs/index.html     隐私政策页
 ```
-
-## English
-
-**Collection Miner** is a Chrome extension (Manifest V3, v0.4.0) that replaces your new tab page: each new tab draws 3 bookmarks from your library by weight and shows them as cards. Likes raise a bookmark's draw weight, dislikes lower it — the system learns what you actually enjoy revisiting.
-
-- **Weighted draws**: weight = 1 + likes − dislikes (min 0.2). The last 60 drawn bookmarks are held back from immediate repeats (when you have 12+ bookmarks).
-- **Rarity tiers** by net score (likes − dislikes): Legendary (gold, ≥ +5), Rare (purple, ≥ +2), Common (white), Cursed (dark, negative).
-- **Age tiers** by when you saved it: gold (5yr+), purple (3yr+), blue (2yr+), green (1yr+), white (under 1yr).
-- **Card interactions**: click to open (counts a click); ♥ to like; 🗑 to delete with an 8-second undo window.
-- **3D cards**: mouse-driven tilt with a cursor-following halo, four parallax layers (60/38/20/0px), flip animations on refresh, and three card-back themes (Royal Classic, Cyber Neon, Celestial).
-- **Refresh**: the button, `Enter` / `Space`, or clicking blank space. Export/import backup as local JSON from the `⋯` menu.
-- **Install**: Chrome Web Store listing coming soon; for now, load unpacked via `chrome://extensions` in Developer mode. Package with `./zip_extension.sh`.
-- **Privacy**: runs entirely locally — no data collected or transmitted. Permissions: `bookmarks`, `storage`, `tabs`. Full policy at the link above.
