@@ -1,107 +1,62 @@
-# Collection Miner / 收藏夹淘金
+<p align="right"><a href="README.en.md">English</a></p>
 
-> 每次打开新标签页，都能重新发现一条被遗忘的书签。
+<p align="center">
+  <img src="./assets/readme/hero.svg" width="100%" alt="Collection Miner · 收藏夹淘金 — 每次打开新标签页，重新发现一条被遗忘的书签；右侧三张书签卡片并排，白色普通、紫色稀有、金色传说">
+</p>
 
-![Screenshot](store-assets/screenshot-1-bookmarks.png)
+<p align="center">
+  <a href="https://xiaosang.cc/collection-miner/">▶ 隐私政策与介绍</a>
+  ·
+  <a href="https://github.com/holynova/collection_miner">GitHub 仓库</a>
+</p>
 
----
+Collection Miner（收藏夹淘金）是一款 Chrome 扩展（Manifest V3，v0.4.0），接管你的新标签页：每次打开，从书签库里按权重随机抽 3 条，以卡片形式呈现。点赞让一条书签以后更容易被抽到，点踩则相反——系统会学习你的偏好，让真正喜欢的书签出现得更频繁。全部数据只存本地，不收集、不传输。
 
-## 中文说明
+## 截图
 
-**Collection Miner** 是一个精致的 Chrome 插件，接管你的新标签页，从浏览器书签库中随机挑选 3 条，以卡片形式呈现。通过持续的点赞/点踩，系统会学习你的偏好，让真正喜欢的书签出现得更频繁。
+<p align="center">
+  <img src="./assets/readme/screenshot.png" width="100%" alt="新标签页：三张书签卡片并排，Google Search（白边，5 天前）、V2EX Community（紫边，3.3 年前）、Hacker News（金边，5.5 年前），下方提示点空白处或按空格/回车换一批">
+</p>
 
-### 功能特性
+## 功能
 
-**动态权重系统**
-- 点赞（♥）让这条书签在未来更容易被抽到；点踩则相反。
-- 系统追踪每条书签的展示次数、点击次数、赞/踩次数，动态调整权重。
+- **动态权重**：每条书签的抽取权重 = 1 + 点赞数 − 点踩数（最低 0.2）；系统追踪每条书签的展示、点击、赞/踩次数。最近抽过的 60 条会暂缓重复出现（书签总数 ≥ 12 时生效）。
+- **稀有度**：按赞踩净分（赞 − 踩）分级——传说 Legendary（金，≥ +5）、稀有 Rare（紫，≥ +2）、普通 Common（白）、诅咒 Cursed（暗，净分为负）。
+- **年龄层**：按收藏时间分级——金（5 年+）、紫（3 年+）、蓝（2 年+）、绿（1 年+）、白（1 年内），卡片边框光泽各不相同。
+- **卡片交互**：点击卡片在新标签页打开链接（记一次点击）；♥ 点赞提升权重；🗑 删除书签（8 秒内可撤销，自定义确认弹窗）。
+- **3D 卡片**：鼠标跟随倾斜 + 光标光晕，标题/链接/元数据分 4 层视差（60px / 38px / 20px / 0px）；刷新时 3D 翻转动画。卡背 3 种主题：皇家经典、赛博霓虹、星空极简。
+- **快捷刷新**：点「再翻三张」按钮、按 `Enter` / `空格`、或点页面任意空白处。
+- **数据管理**：右上角 `⋯` 菜单可导出数据 / 导入备份（本地 JSON 文件 `collection_miner_backup_日期.json`）。
+- **其他**：中英文界面切换；检测到多个本插件新标签页时，提供一键「关闭其他」。
 
-**视觉分级**
-- **稀有度**：根据交互评分，卡片获得边框光晕等级——`传说 Legendary`（金）、`稀有 Rare`（紫/蓝）、`普通 Common`（白）、`诅咒 Cursed`（暗）。
-- **年龄层**：根据书签收藏的时间长短，卡片呈现不同光泽——`金（5年+）`、`紫（3年+）`、`蓝（2年+）`、`绿（1年+）`、`白（1年内）`。
+## 安装
 
-**卡片交互**
-- 点击卡片正面 → 在新标签页打开书签链接（记录一次点击）。
-- ♥ 按钮 → 点赞，提升权重。
-- 🗑 按钮 → 删除书签（8 秒内可撤销）。
+Chrome 应用商店版本即将上架，目前手动安装：
 
-**高质感视觉设计**
-- 每张卡片都有 3D 鼠标跟随倾斜效果与交互式光晕。
-- 翻入/翻出均采用无缝 3D 翻转动画。
-- 卡背为青绿色调品牌设计（Collection / Miner）。
+1. 下载或克隆本仓库
+2. 打开 `chrome://extensions`，开启右上角「开发者模式」
+3. 点击「加载已解压的扩展程序」，选择本项目文件夹
 
-**快捷刷新**
-- 点击 `再翻三张` 按钮。
-- 按 `Enter` 或 `空格键`。
-- 点击页面任意空白区域。
+打包发布：`./zip_extension.sh`（生成 `collection_miner-vX.X.X.zip`，只含扩展运行必需文件）。
 
-**数据管理**
-- 点击右上角 `⋯` 菜单 → **导出数据** / **导入备份**，将书签权重和历史记录保存为本地 JSON，防止数据丢失。
+## 隐私
 
-**其他**
-- 中英文界面切换（右上角 `EN` 按钮）。
-- 检测到多个本插件新标签页时，提供一键"关闭其他"按钮。
+完全本地运行，不收集、不传输任何数据。书签数据与权重只存在浏览器本地存储中；权限只有三项：`bookmarks`（读书签）、`storage`（存权重与历史）、`tabs`（检测重复标签页）。
 
----
+→ [完整隐私政策](https://xiaosang.cc/collection-miner/)（另见 `PRIVACY.md`）
 
-## English
+## 技术
 
-**Collection Miner** is a focused Chrome extension that replaces your new tab page with a card-based view of your browser bookmarks. Each time you open a new tab, 3 bookmarks are randomly drawn from your library. Like and dislike them to teach the system your preferences over time.
+- Manifest V3，零构建、零依赖：`service-worker.js` 在安装/启动/书签变化时把书签树拍扁同步到 `chrome.storage.local`，新标签页从本地快照抽卡。
+- 版本历史见 `CHANGELOG.md`（v0.4.0 起专注书签管理）。
 
-### Features
-
-**Smart Weighting**
-- Liking (♥) a bookmark increases its chance of appearing again; disliking decreases it.
-- The system tracks impressions, clicks, and ratings to continuously refine what you see.
-
-**Visual Tiers**
-- **Rarity**: Cards earn glowing border tiers based on your ratings — `Legendary` (gold), `Rare` (purple/blue), `Common` (white), `Cursed` (dark).
-- **Age Tier**: Cards display a metallic luster based on how long ago you saved them — `Gold (5yr+)`, `Purple (3yr+)`, `Blue (2yr+)`, `Green (1yr+)`, `White (new)`.
-
-**Card Interactions**
-- Click a card → opens the bookmark link in a new tab (counts as a click).
-- ♥ → like and boost the bookmark's weight.
-- 🗑 → delete the bookmark (8-second undo window).
-
-**Premium Design**
-- Mouse-driven 3D tilt and interactive spotlight halo on every card.
-- Seamless flip-in / flip-out animations on refresh.
-- Teal-themed card backs with the Collection Miner branding.
-
-**Refresh Shortcuts**
-- Click the `Refresh` button.
-- Press `Enter` or `Space`.
-- Click any blank area on the page.
-
-**Data Management**
-- Click `⋯` in the top-right → **Export Data** / **Import Backup** to save all bookmark weights and history as a local JSON file.
-
-**More**
-- One-click Chinese / English language toggle (`EN` button, top-right).
-- Detects duplicate Miner tabs and offers a "Close Others" button to keep your workspace tidy.
-
----
-
-## 安装 / Install
-
-**Chrome Web Store（推荐）**
-
-> *(即将上架 / Coming soon)*
-
-**手动安装 / Manual Install**
-
-1. 下载或克隆本仓库 / Download or clone this repository
-2. 打开 `chrome://extensions`
-3. 开启右上角「开发者模式」/ Enable "Developer mode"
-4. 点击「加载已解压的扩展程序」/ Click "Load unpacked"
-5. 选择本项目文件夹 / Select this project folder
-
----
-
-## 隐私 / Privacy
-
-本插件完全本地运行，不收集、不传输任何数据。所有书签数据和权重仅存储在你的浏览器本地。
-
-This extension runs entirely locally. No data is collected or transmitted. All bookmark data and weights are stored only in your browser's local storage.
-
-→ [完整隐私政策 / Full Privacy Policy](https://holynova.github.io/collection_miner/)
+```
+manifest.json       MV3 清单：newtab 接管、bookmarks/storage/tabs 权限
+newtab.html         新标签页结构
+newtab.css          卡片、3D 视差、稀有度/年龄层样式
+newtab.js           抽卡、权重、稀有度/年龄层、导入导出、重复标签页检测
+service-worker.js   书签树同步到本地存储
+icons/              16/48/128 三档图标
+store-assets/       应用商店宣传图与截图
+docs/index.html     隐私政策页
+```
